@@ -1,0 +1,14 @@
+fastapi==0.104.1
+uvicorn==0.24.0
+python-dotenv==1.0.0
+pydantic==2.4.2
+boto3==1.29.3
+cryptography==41.0.5
+python-jose==3.3.0
+passlib==1.7.4
+python-multipart==0.0.6
+pytest==7.4.3
+black==23.11.0
+flake8==6.1.0
+mypy==1.7.1
+moto==4.2.7  # For testing AWS services 
