@@ -6,7 +6,7 @@ boto3==1.29.3
 cryptography==44.0.1
 python-jose==3.4.0
 passlib==1.7.4
-python-multipart==0.0.6
+python-multipart==0.0.18
 pytest==7.4.3
 black==23.11.0
 flake8==6.1.0
