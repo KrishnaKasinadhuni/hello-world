@@ -114,6 +114,55 @@ const routes = [
                 }).code(500);
             }
         }
+    },
+    {
+        method: 'POST',
+        path: '/api/similar',
+        options: {
+            payload: {
+                maxBytes: config.maxFileSize,
+                output: 'stream',
+                parse: true,
+                multipart: true,
+                allow: 'multipart/form-data'
+            }
+        },
+        handler: async (request, h) => {
+            try {
+                const data = request.payload;
+                if (!data.file) {
+                    return h.response({
+                        success: false,
+                        error: 'No file uploaded'
+                    }).code(400);
+                }
+
+                // Convert stream to buffer
+                const chunks = [];
+                for await (const chunk of data.file) {
+                    chunks.push(chunk);
+                }
+                const imageBuffer = Buffer.concat(chunks);
+                
+                // Process image and generate embedding
+                const processedImage = await imageService.processImage(imageBuffer);
+                const queryEmbedding = await imageService.generateEmbedding(processedImage);
+                
+                // Find similar images
+                const similarImages = await imageService.findSimilarImages(queryEmbedding);
+                
+                return h.response({
+                    success: true,
+                    similarImages
+                });
+            } catch (error) {
+                console.error('Similarity search error:', error);
+                return h.response({
+                    success: false,
+                    error: error.message
+                }).code(500);
+            }
+        }
     }
 ];
 

@@ -110,6 +110,52 @@ class ImageService {
             throw new Error(`Failed to save image: ${error.message}`);
         }
     }
+
+    async findSimilarImages(queryEmbedding) {
+        try {
+            // Get all files from the uploads directory
+            const uploadDir = path.join(process.cwd(), config.uploadDir);
+            const files = await fs.readdir(uploadDir);
+            
+            // Filter for image files and get their embeddings
+            const imageFiles = files.filter(file => 
+                config.allowedMimeTypes.includes(path.extname(file).toLowerCase())
+            );
+
+            const similarImages = [];
+            
+            // Compare each image's embedding with the query embedding
+            for (const file of imageFiles) {
+                const filePath = path.join(uploadDir, file);
+                const imageBuffer = await fs.readFile(filePath);
+                const embedding = await this.generateEmbedding(imageBuffer);
+                
+                // Calculate cosine similarity
+                const similarity = this.cosineSimilarity(queryEmbedding, embedding);
+                
+                similarImages.push({
+                    filename: file,
+                    filepath: filePath,
+                    similarity: similarity
+                });
+            }
+            
+            // Sort by similarity (highest first) and return top 5
+            return similarImages
+                .sort((a, b) => b.similarity - a.similarity)
+                .slice(0, 5);
+        } catch (error) {
+            throw new Error(`Failed to find similar images: ${error.message}`);
+        }
+    }
+
+    cosineSimilarity(vec1, vec2) {
+        // Calculate cosine similarity between two vectors
+        const dotProduct = vec1.reduce((sum, val, i) => sum + val * vec2[i], 0);
+        const norm1 = Math.sqrt(vec1.reduce((sum, val) => sum + val * val, 0));
+        const norm2 = Math.sqrt(vec2.reduce((sum, val) => sum + val * val, 0));
+        return dotProduct / (norm1 * norm2);
+    }
 }
 
 module.exports = new ImageService(); 
