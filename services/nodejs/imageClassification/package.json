@@ -4,7 +4,7 @@
   "description": "AI-powered image classification service using Node.js and Cohere",
   "main": "src/server.js",
   "engines": {
-    "node": ">=18.17.0"
+    "node": ">=24.10.0"
   },
   "scripts": {
     "start": "node src/server.js",

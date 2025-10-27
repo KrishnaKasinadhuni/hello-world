@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18.17.0-alpine AS builder
+FROM node:24.10.0-alpine AS builder
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ RUN npm ci
 COPY . .
 
 # Production stage
-FROM node:18.17.0-alpine
+FROM node:24.10.0-alpine
 
 WORKDIR /app
 
