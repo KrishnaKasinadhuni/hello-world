@@ -2,5 +2,5 @@ fastapi
 uvicorn[standard]
 boto3
 python-dotenv
-python-multipart
+python-multipart>=0.0.20
 pillow
