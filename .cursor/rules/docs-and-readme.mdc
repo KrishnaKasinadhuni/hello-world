@@ -1,0 +1,10 @@
+---
+description: Rules for maintaining documentation, README, and AGENTS guidance
+globs: *.md, docs/**, .ai/**, AGENTS.md, CLAUDE.md
+---
+# Documentation & Maintenance Rules
+
+1. **Keep Guidance Synchronized:** Whenever subprojects are added, removed, updated, or re-architected, update `README.md`, `AGENTS.md`, `CLAUDE.md`, and `docs/architecture.md`.
+2. **Document Status Accurately:** Clearly state if a folder is a **[WORKING POC]**, **[PARTIAL POC]**, **[SCAFFOLD]**, or **[DOCS-ONLY]**. Never claim a scaffold is a working app.
+3. **No Hallucinated Commands:** Ensure all build/run/test commands listed in documentation exist in the respective `package.json`, `requirements.txt`, or shell scripts.
+4. **Update Policy:** Keep the "Last Reviewed" timestamp in `AGENTS.md` updated with the date and inspected areas.

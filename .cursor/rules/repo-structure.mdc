@@ -1,0 +1,18 @@
+---
+description: Repository structure and subproject boundary rules
+globs: *
+---
+# Repository Structure & Subproject Boundaries
+
+This repository (`hello-world`) is a multi-project sandbox. Always adhere to subproject isolation:
+
+1. **Subproject Independence:** Each subdirectory (`frontend/`, `cdk-patterns/`, `services/nodejs/imageClassification/`, `services/python/logAnalyzer/`, `reverse-image-search-aws/backend/`) has its own dependencies and configuration files. Do not create top-level dependency sharing unless explicitly instructed.
+2. **Recognize Scaffolds:**
+   - `reverse-image-search-aws/frontend/` (Scaffold only)
+   - `reverse-image-search-aws/infrastructure/` (Scaffold only)
+   - `cdk-patterns/` (CDK scaffold stack)
+   Do not treat scaffold directories as functional production systems.
+3. **Recognize Docs-Only Areas:**
+   - `mcp-gateway-instructions/` is a documentation-only folder containing step-by-step guides. Do not place application logic inside it.
+4. **Active Integrations:**
+   - `frontend/` (React, port 3001) proxies to `services/nodejs/imageClassification/` (Node.js, port 3000). Keep endpoint interfaces aligned.

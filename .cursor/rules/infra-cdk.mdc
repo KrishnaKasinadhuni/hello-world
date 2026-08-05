@@ -1,0 +1,19 @@
+---
+description: AWS CDK and infrastructure development rules
+globs: cdk-patterns/**, reverse-image-search-aws/infrastructure/**, services/aws/**
+---
+# AWS Infrastructure & CDK Guidelines
+
+1. **CDK TypeScript Stack:** `cdk-patterns/` is an AWS CDK v2 TypeScript project (`lib/cdk-patterns-stack.ts`).
+2. **Branch Isolation:** Infrastructure experiments like DynamoDB patterns belong on feature branches (e.g. `feat/cdk-dynamo`).
+3. **IAM & Security:**
+   - Refer to `services/aws/iam-setup/` for IAM security procedures.
+   - Deployments use account `908027415245` via the `assumed-admin` profile. Refresh sessions with `refresh-admin` or `./services/aws/iam-setup/scripts/assume-role.sh`.
+   - Never commit AWS access keys or secret keys to version control.
+4. **Deployment Workflows:**
+   - Rapid dev iterations: `cd cdk-patterns && npm run deploy:dev` (Express mode `cdk deploy --express`, skips full stabilization wait, rollback disabled by default).
+   - Production deployments: `cd cdk-patterns && npm run deploy:prod` (Standard mode `cdk deploy` with full resource stabilization and automatic rollback).
+5. **Validation:**
+   - Synthesize CloudFormation template: `cd cdk-patterns && npm run synth`
+   - Diff stack changes: `cd cdk-patterns && npm run diff`
+   - Test CDK stack constructs: `cd cdk-patterns && npm test`
