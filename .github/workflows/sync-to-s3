@@ -3,7 +3,7 @@ name: Run Bash Script on Push
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   run_script:

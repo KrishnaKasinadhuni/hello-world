@@ -10,8 +10,8 @@
 |---|---|
 | **Remote** | `origin` |
 | **Fetch / Push URL** | `https://github.com/KrishnaKasinadhuni/hello-world.git` |
-| **Default branch** | `master` |
-| **Active branches** | `master`, `feat/cdk-dynamo` (in-progress CDK + DynamoDB work) |
+| **Default branch** | `main` |
+| **Active branches** | `main`, `feat/cdk-dynamo` (in-progress CDK + DynamoDB work) |
 
 ---
 
