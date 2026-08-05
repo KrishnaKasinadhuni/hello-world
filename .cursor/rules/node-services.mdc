@@ -1,0 +1,16 @@
+---
+description: Node.js Hapi and Cohere AI service guidelines
+globs: services/nodejs/**
+---
+# Node.js Services Guidelines (`services/nodejs/imageClassification`)
+
+1. **Stack:** Node.js (v18+), Hapi server framework, Cohere AI SDK (`@cohere-ai/sdk`), Docker / Docker Compose.
+2. **Core Capabilities:**
+   - Image upload (`/api/upload`)
+   - Image classification (`/api/classify`)
+   - Visual similarity search (`/api/similar`)
+   - Health check (`/health`)
+3. **Environment:** Requires `COHERE_API_KEY` and `PORT=3000`. Refer to `.env.example` when configuring local environment.
+4. **Validation:**
+   - Test endpoints using test scripts under `test-images/` or curl scripts under `curl-requests/`.
+   - Run in dev mode: `npm run dev`.

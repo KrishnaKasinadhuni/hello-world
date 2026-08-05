@@ -1,0 +1,18 @@
+---
+description: Python services and FastAPI backend guidelines
+globs: reverse-image-search-aws/backend/**, services/python/**
+---
+# Python Services & FastAPI Guidelines
+
+1. **Subprojects:**
+   - `reverse-image-search-aws/backend/`: FastAPI + boto3 + Bedrock Titan embeddings + OpenSearch serverless.
+   - `services/python/logAnalyzer/`: Python log ML analyzer.
+   - `services/python/configManager/`: Microservice for configuration management.
+2. **Environment & Dependencies:**
+   - Each Python subproject maintains its own `requirements.txt` and `Dockerfile`.
+   - Always load environment variables using `python-dotenv` early (`load_dotenv()`).
+3. **Partial Implementations:**
+   - In `reverse-image-search-aws/backend/app/search.py`, OpenSearch indexing (`index_image_in_opensearch`) and search (`search_similar_images`) are stubs. Mark any changes around OpenSearch clearly as pending full integration.
+4. **Validation:**
+   - Validate Python syntax: `python3 -m py_compile main.py` or subproject entry points.
+   - Check FastAPI endpoints at `http://localhost:8000/docs`.

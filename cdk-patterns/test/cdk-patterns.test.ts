@@ -1,17 +1,21 @@
-// import * as cdk from 'aws-cdk-lib';
-// import { Template } from 'aws-cdk-lib/assertions';
-// import * as CdkPatterns from '../lib/cdk-patterns-stack';
+import * as cdk from 'aws-cdk-lib';
+import { Template } from 'aws-cdk-lib/assertions';
+import * as CdkPatterns from '../lib/cdk-patterns-stack';
 
-// example test. To run these tests, uncomment this file along with the
-// example resource in lib/cdk-patterns-stack.ts
-test('SQS Queue Created', () => {
-//   const app = new cdk.App();
-//     // WHEN
-//   const stack = new CdkPatterns.CdkPatternsStack(app, 'MyTestStack');
-//     // THEN
-//   const template = Template.fromStack(stack);
+test('Private S3 Bucket Created', () => {
+  const app = new cdk.App();
+  const stack = new CdkPatterns.CdkPatternsStack(app, 'MyTestStack', {
+    env: { account: '908027415245', region: 'us-east-1' }
+  });
+  const template = Template.fromStack(stack);
 
-//   template.hasResourceProperties('AWS::SQS::Queue', {
-//     VisibilityTimeout: 300
-//   });
+  template.hasResourceProperties('AWS::S3::Bucket', {
+    BucketName: 'config-dev-908027415245',
+    PublicAccessBlockConfiguration: {
+      BlockPublicAcls: true,
+      BlockPublicPolicy: true,
+      IgnorePublicAcls: true,
+      RestrictPublicBuckets: true
+    }
+  });
 });

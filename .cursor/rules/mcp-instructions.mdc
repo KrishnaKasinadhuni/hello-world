@@ -1,0 +1,10 @@
+---
+description: MCP Gateway instructions directory guidelines
+globs: mcp-gateway-instructions/**
+---
+# MCP Gateway Instructions Guidelines
+
+1. **Docs-Only Boundary:** The directory `mcp-gateway-instructions/` is a structured documentation corpus explaining how an AI agent can build an MCP Gateway step-by-step across 6 phases (`01-setup` through `06-documentation`).
+2. **Do Not Place Code Here:** Do not write application source code directly inside `mcp-gateway-instructions/`.
+3. **Format Standard:** Each instruction file follows: Objective -> Prerequisites -> Implementation Steps -> Code Examples -> Configuration -> Testing -> Verification -> Troubleshooting.
+4. **Maintenance:** Keep `mcp-gateway-instructions/README.md` index in sync if markdown instruction files are added or renamed.

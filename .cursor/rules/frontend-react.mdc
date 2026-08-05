@@ -1,0 +1,11 @@
+---
+description: React, TypeScript, MUI, and MobX guidelines for the root frontend
+globs: frontend/**
+---
+# React & Frontend Guidelines (`frontend/`)
+
+1. **Tech Stack:** React 19, TypeScript, Material UI (MUI v7), MobX (`mobx-react-lite`), Axios.
+2. **State Management:** Keep application state in MobX stores (`src/stores/ImageStore.ts`). Use the `observer` higher-order component from `mobx-react-lite` on React components observing state.
+3. **Proxy Setup:** Development requests to `/api/*` are proxied to `http://localhost:3000` via `src/setupProxy.js`. Ensure backend endpoint compatibility.
+4. **UI Design:** Use Material UI components and ThemeProvider (`createTheme`). Maintain dark/light mode toggle support.
+5. **Testing:** Run tests using `npm test -- --watchAll=false` from `frontend/`.
