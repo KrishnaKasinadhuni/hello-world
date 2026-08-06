@@ -85,6 +85,7 @@ python3 -m py_compile src/*.py
 # GCP Cloud Run MCP Gateway
 cd services/gcp/mcpGateway
 python3 -m py_compile main.py auth.py tools/*.py
+pytest
 ```
 
 ---
