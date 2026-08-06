@@ -53,7 +53,7 @@ TOOLS_MANIFEST = [
                 "name": {"type": "string", "description": "Entity name (e.g. 'Cloud Run')."},
                 "category": {"type": "string", "description": "Category or type (e.g. 'Infrastructure')."},
                 "observation": {"type": "string", "description": "Factual note or observation."},
-                "ttl_days": {"type": "integer", "description": "Retention period in days (default 90).", "default": 90},
+                "ttl_days": {"type": "integer", "description": "Retention period in days (default 30).", "default": 30},
                 "pinned": {"type": "boolean", "description": "If True, prevents automatic expiration.", "default": False}
             },
             "required": ["name", "category", "observation"]
@@ -81,7 +81,7 @@ TOOLS_MANIFEST = [
                     "description": "List of URLs to monitor and ingest."
                 },
                 "category": {"type": "string", "description": "Category tag for intelligence entities.", "default": "Tech Intelligence"},
-                "ttl_days": {"type": "integer", "description": "Retention TTL in days (default 90).", "default": 90}
+                "ttl_days": {"type": "integer", "description": "Retention TTL in days (default 30).", "default": 30}
             },
             "required": ["urls"]
         }
@@ -110,7 +110,7 @@ async def execute_tool(name: str, arguments: Dict[str, Any]) -> str:
         entity_name = arguments.get("name")
         category = arguments.get("category")
         observation = arguments.get("observation")
-        ttl_days = arguments.get("ttl_days", 90)
+        ttl_days = arguments.get("ttl_days", 30)
         pinned = arguments.get("pinned", False)
         res = await remember_entity(entity_name, category, [observation], ttl_days=ttl_days, pinned=pinned)
         return f"Successfully stored memory for '{entity_name}' [{category}]: {observation}"
@@ -129,7 +129,7 @@ async def execute_tool(name: str, arguments: Dict[str, Any]) -> str:
     elif name == "run_tech_radar":
         urls = arguments.get("urls", [])
         cat = arguments.get("category", "Tech Intelligence")
-        ttl = arguments.get("ttl_days", 90)
+        ttl = arguments.get("ttl_days", 30)
         res = await run_tech_radar(urls=urls, category=cat, ttl_days=ttl)
         indexed = res.get("indexed_entities", [])
         return f"Tech Radar completed! Processed {res.get('processed_count')} URLs and indexed {res.get('indexed_count')} entities into memory:\n- " + "\n- ".join(indexed)

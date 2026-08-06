@@ -36,4 +36,12 @@ gcloud storage buckets add-iam-policy-binding "gs://${BUCKET_NAME}" \
   --member="user:${ADMIN_USER}" \
   --role="roles/storage.objectAdmin"
 
-echo "✅ GCS Bucket IAM Security Configuration Complete!"
+# 5. Apply 30-Day Object Lifecycle Expiration Policy
+echo "5️⃣ Applying 30-Day Object Lifecycle Policy (Delete objects older than 30 days)..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LIFECYCLE_FILE="${SCRIPT_DIR}/../lifecycle.json"
+gcloud storage buckets update "gs://${BUCKET_NAME}" \
+  --project="${PROJECT_ID}" \
+  --lifecycle-file="${LIFECYCLE_FILE}"
+
+echo "✅ GCS Bucket IAM Security & 30-Day Lifecycle Configuration Complete!"
