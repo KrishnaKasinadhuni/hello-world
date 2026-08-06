@@ -195,6 +195,28 @@ docker-compose up
 
 ---
 
+### 7. `services/gcp/mcpGateway/` — GCP Cloud Run Remote MCP Gateway
+**Status:** ✅ Working Service (Dockerized, Cloud Run ready)  
+**Stack:** Python 3.11, FastAPI, FastMCP SDK, Google OAuth 2.0 / OIDC  
+**What it does:** Hosts a secure remote Model Context Protocol (MCP) gateway service on GCP Cloud Run featuring Google OAuth 2.0 authentication, SSE remote transport, Web Fetching (HTML-to-Markdown), and long-term Knowledge Graph Memory.
+
+**Endpoints:**
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/health` | Service health status |
+| `GET` | `/api/auth/verify` | Verifies Google OAuth 2.0 Bearer token |
+| `GET` | `/sse` | Remote MCP Server-Sent Events connection |
+| `POST` | `/messages` | Remote MCP JSON-RPC message handler |
+
+**To run locally:**
+```bash
+cd services/gcp/mcpGateway
+pip install -r requirements.txt
+python main.py             # http://localhost:8080/docs
+```
+
+---
+
 ### 7. `services/aws/iam-setup/` — AWS IAM Setup & Role Assumption
 **Status:** ✅ Implemented and in active use  
 **What it does:** Documents and scripts for setting up IAM users, groups, and roles for safe AWS access.

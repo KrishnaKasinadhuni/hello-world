@@ -28,6 +28,7 @@ hello-world/
 │   ├── python/
 │   │   ├── logAnalyzer/              # [WORKING POC] Python ML log analyzer (Dockerized)
 │   │   └── configManager/            # [WORKING POC] Python config manager (Dockerized)
+│   ├── gcp/mcpGateway/               # [WORKING] GCP Cloud Run Remote MCP Gateway (FastAPI + Google OAuth)
 │   └── curls/
 │       └── helloworld-apigw.sh       # [WORKING] Sample script querying API Gateway
 ├── mcp-gateway-instructions/         # [DOCS-ONLY] Step-by-step instructions for building an MCP Gateway
@@ -51,6 +52,7 @@ hello-world/
 | `services/nodejs/imageClassification/` | Node.js v18+, Hapi, Cohere SDK | Working POC | Node backend powering Cohere AI image uploads & similarity. Target of `frontend/` proxy. |
 | `services/python/logAnalyzer/` | Python, scikit-learn, Docker | Working POC | Log anomaly detection microservice. |
 | `services/python/configManager/` | Python, Docker | Working POC | Configuration management service. |
+| `services/gcp/mcpGateway/` | Python 3.11, FastAPI, Google OAuth 2.0 | Working Service | Remote MCP Gateway on GCP Cloud Run with SSE & FastMCP tools. |
 | `services/curls/` | Bash, AWS CLI | Reference Script | Shell scripts testing external AWS API Gateway endpoints. |
 | `mcp-gateway-instructions/` | Markdown | Docs-Only | 6-phase instruction set for building an MCP Gateway. Contains NO executable code. |
 

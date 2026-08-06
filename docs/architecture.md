@@ -16,10 +16,11 @@ graph TD
         NodeImageService["services/nodejs/imageClassification (Hapi + Cohere AI)"]
     end
 
-    subgraph Python & AWS Bedrock Services
+    subgraph Python & GCP Cloud Run Services
         RISBackend["reverse-image-search-aws/backend (FastAPI + Bedrock Titan)"]
         PyLogAnalyzer["services/python/logAnalyzer (Scikit-Learn Log ML)"]
         PyConfigMgr["services/python/configManager (Config Service)"]
+        MCPGateway["services/gcp/mcpGateway (Cloud Run FastAPI + Google OAuth)"]
     end
 
     subgraph AWS Infrastructure & Security
@@ -52,6 +53,7 @@ graph TD
 | `cdk-patterns/` | Infrastructure | **Scaffold** | Infrastructure as Code boilerplate using AWS CDK v2. Active feature work exists on `feat/cdk-dynamo` branch. |
 | `services/python/logAnalyzer/` | Microservice | **Active / Working POC** | Python ML service for log analysis. Dockerized with `docker-compose.yml`. |
 | `services/python/configManager/` | Microservice | **Active / Working POC** | Python configuration manager. Dockerized with `docker-compose.yml`. |
+| `services/gcp/mcpGateway/` | Microservice | **Active Service** | Cloud Run Remote MCP Gateway (FastAPI + Google OAuth 2.0). Provides SSE transport (`/sse`), Web Fetch, and GCS Memory tools. |
 | `services/aws/iam-setup/` | Security & Admin | **Active Tooling** | Shell scripts (`scripts/assume-role.sh`) and instructions to assume IAM role `admin-access-role` on AWS account `908027415245`. |
 | `services/curls/` | CLI Scripts | **Reference Tooling** | `helloworld-apigw.sh` fetches API key from AWS Secrets Manager and tests deployed API Gateway endpoint. |
 | `mcp-gateway-instructions/` | Documentation | **Docs-Only** | 6-phase instruction set (01-06) for building an MCP Gateway. Contains no application code. |
