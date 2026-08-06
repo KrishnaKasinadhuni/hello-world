@@ -1,6 +1,6 @@
 import os
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
 from main import app
 
@@ -30,6 +30,38 @@ def test_auth_verify_disabled_auth():
         assert data["user"]["email"] == "dev-user@example.com"
 
 
+def test_auth_verify_email_whitelisted():
+    mock_id_info = {
+        "iss": "https://accounts.google.com",
+        "email": "krishna.kasinadhuni@gmail.com",
+        "sub": "user-123"
+    }
+    with patch("auth.DISABLE_AUTH", False), \
+         patch("google.oauth2.id_token.verify_oauth2_token", return_value=mock_id_info):
+        response = client.get(
+            "/api/auth/verify",
+            headers={"Authorization": "Bearer fake-valid-token"}
+        )
+        assert response.status_code == 200
+        assert response.json()["user"]["email"] == "krishna.kasinadhuni@gmail.com"
+
+
+def test_auth_verify_email_forbidden():
+    mock_id_info = {
+        "iss": "https://accounts.google.com",
+        "email": "unauthorized-hacker@example.com",
+        "sub": "user-456"
+    }
+    with patch("auth.DISABLE_AUTH", False), \
+         patch("google.oauth2.id_token.verify_oauth2_token", return_value=mock_id_info):
+        response = client.get(
+            "/api/auth/verify",
+            headers={"Authorization": "Bearer fake-unauthorized-token"}
+        )
+        assert response.status_code == 403
+        assert "Access denied" in response.json()["detail"]
+
+
 def test_list_tools_api():
     with patch("auth.DISABLE_AUTH", True):
         response = client.get("/api/tools")
@@ -39,6 +71,8 @@ def test_list_tools_api():
         assert "fetch_web_page" in tool_names
         assert "store_memory" in tool_names
         assert "query_memory" in tool_names
+        assert "run_tech_radar" in tool_names
+        assert "prune_memory" in tool_names
 
 
 def test_call_tool_api_store_and_query():
@@ -73,7 +107,6 @@ def test_call_tool_api_store_and_query():
 
 
 def test_mcp_jsonrpc_initialize():
-    # Setup session
     from main import sse_sessions
     import asyncio
     
@@ -94,7 +127,6 @@ def test_mcp_jsonrpc_initialize():
         assert response.status_code == 200
         assert response.json()["status"] == "accepted"
         
-        # Check queued response
         res_msg = queue.get_nowait()
         assert res_msg["id"] == 1
         assert res_msg["result"]["protocolVersion"] == "2024-11-05"
