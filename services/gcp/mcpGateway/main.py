@@ -10,12 +10,13 @@ from pydantic import BaseModel, Field
 
 from auth import verify_oauth_token, DISABLE_AUTH, GOOGLE_CLIENT_ID
 from tools.web_fetch import fetch_web_markdown
-from tools.memory import remember_entity, recall_entities
+from tools.memory import remember_entity, recall_entities, prune_expired_memories
+from tools.radar import run_tech_radar
 
 app = FastAPI(
     title="GCP Cloud Run MCP Gateway",
-    description="Hosted Remote Model Context Protocol (MCP) Gateway with Google OAuth 2.0 OIDC Authentication.",
-    version="1.0.0"
+    description="Hosted Remote Model Context Protocol (MCP) Gateway with Google OAuth 2.0 OIDC Authentication & Tech Radar.",
+    version="1.1.0"
 )
 
 app.add_middleware(
@@ -45,13 +46,15 @@ TOOLS_MANIFEST = [
     },
     {
         "name": "store_memory",
-        "description": "Stores a fact or observation into long-term knowledge graph memory.",
+        "description": "Stores a fact or observation into long-term knowledge graph memory with automatic TTL retention and secret sanitization.",
         "inputSchema": {
             "type": "object",
             "properties": {
                 "name": {"type": "string", "description": "Entity name (e.g. 'Cloud Run')."},
                 "category": {"type": "string", "description": "Category or type (e.g. 'Infrastructure')."},
-                "observation": {"type": "string", "description": "Factual note or observation."}
+                "observation": {"type": "string", "description": "Factual note or observation."},
+                "ttl_days": {"type": "integer", "description": "Retention period in days (default 90).", "default": 90},
+                "pinned": {"type": "boolean", "description": "If True, prevents automatic expiration.", "default": False}
             },
             "required": ["name", "category", "observation"]
         }
@@ -64,6 +67,31 @@ TOOLS_MANIFEST = [
             "properties": {
                 "query": {"type": "string", "description": "Search filter query string.", "default": ""}
             }
+        }
+    },
+    {
+        "name": "run_tech_radar",
+        "description": "Monitors target web URLs (docs/release notes), parses updates, and indexes intelligence facts into knowledge graph memory with TTL retention.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "urls": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "List of URLs to monitor and ingest."
+                },
+                "category": {"type": "string", "description": "Category tag for intelligence entities.", "default": "Tech Intelligence"},
+                "ttl_days": {"type": "integer", "description": "Retention TTL in days (default 90).", "default": 90}
+            },
+            "required": ["urls"]
+        }
+    },
+    {
+        "name": "prune_memory",
+        "description": "Prunes expired unpinned entity entries from knowledge graph memory based on retention policies.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {}
         }
     }
 ]
@@ -82,7 +110,9 @@ async def execute_tool(name: str, arguments: Dict[str, Any]) -> str:
         entity_name = arguments.get("name")
         category = arguments.get("category")
         observation = arguments.get("observation")
-        res = await remember_entity(entity_name, category, [observation])
+        ttl_days = arguments.get("ttl_days", 90)
+        pinned = arguments.get("pinned", False)
+        res = await remember_entity(entity_name, category, [observation], ttl_days=ttl_days, pinned=pinned)
         return f"Successfully stored memory for '{entity_name}' [{category}]: {observation}"
 
     elif name == "query_memory":
@@ -95,6 +125,18 @@ async def execute_tool(name: str, arguments: Dict[str, Any]) -> str:
         for item_name, item in entities.items():
             out.append(f"- **{item_name}** ({item.get('category')}): {', '.join(item.get('observations', []))}")
         return "\n".join(out)
+
+    elif name == "run_tech_radar":
+        urls = arguments.get("urls", [])
+        cat = arguments.get("category", "Tech Intelligence")
+        ttl = arguments.get("ttl_days", 90)
+        res = await run_tech_radar(urls=urls, category=cat, ttl_days=ttl)
+        indexed = res.get("indexed_entities", [])
+        return f"Tech Radar completed! Processed {res.get('processed_count')} URLs and indexed {res.get('indexed_count')} entities into memory:\n- " + "\n- ".join(indexed)
+
+    elif name == "prune_memory":
+        res = await prune_expired_memories()
+        return f"Memory pruning complete: Pruned {res.get('pruned_count')} expired entity/entities. Retained {res.get('retained_count')} active entries."
 
     else:
         raise ValueError(f"Unknown tool name: '{name}'")
@@ -138,6 +180,12 @@ async def call_tool_api(body: ToolCallRequest, user: dict = Depends(verify_oauth
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.post("/api/memory/prune", tags=["Memory Management"])
+async def prune_memory_api(user: dict = Depends(verify_oauth_token)):
+    """API endpoint to prune expired, unpinned memories based on retention policy."""
+    res = await prune_expired_memories()
+    return res
+
 # MCP Remote Transport (SSE + JSON-RPC)
 @app.get("/sse", tags=["MCP Remote Transport"])
 async def handle_sse(request: Request, user: dict = Depends(verify_oauth_token)):
@@ -147,7 +195,6 @@ async def handle_sse(request: Request, user: dict = Depends(verify_oauth_token))
 
     async def event_generator():
         try:
-            # Initial SSE endpoint notification
             endpoint_url = f"/messages?session_id={session_id}"
             yield f"event: endpoint\ndata: {endpoint_url}\n\n"
 
@@ -158,7 +205,6 @@ async def handle_sse(request: Request, user: dict = Depends(verify_oauth_token))
                     data = await asyncio.wait_for(queue.get(), timeout=20.0)
                     yield f"event: message\ndata: {json.dumps(data)}\n\n"
                 except asyncio.TimeoutError:
-                    # Ping / keep-alive comment
                     yield ": keep-alive\n\n"
         finally:
             sse_sessions.pop(session_id, None)
@@ -184,13 +230,13 @@ async def handle_messages(request: Request, session_id: str = Query(...)):
             "result": {
                 "protocolVersion": "2024-11-05",
                 "capabilities": {"tools": {}},
-                "serverInfo": {"name": "GCP Cloud Run Remote MCP Gateway", "version": "1.0.0"}
+                "serverInfo": {"name": "GCP Cloud Run Remote MCP Gateway", "version": "1.1.0"}
             }
         }
         await queue.put(response)
 
     elif method == "notifications/initialized":
-        pass  # Acknowledge init
+        pass
 
     elif method == "tools/list":
         response = {
