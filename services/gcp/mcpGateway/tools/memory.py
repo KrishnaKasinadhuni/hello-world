@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Dict, Any, List, Optional
 from google.cloud import storage
 
-GCS_BUCKET_NAME = os.getenv("MEMORY_GCS_BUCKET", None)
+GCS_BUCKET_NAME = os.getenv("MEMORY_GCS_BUCKET", "mcp-memory-precise-works-456015-h9")
 LOCAL_MEMORY_FILE = os.getenv("LOCAL_MEMORY_FILE", "/tmp/mcp_memory.json")
 DEFAULT_RETENTION_DAYS = int(os.getenv("MEMORY_RETENTION_DAYS", "90"))
 
