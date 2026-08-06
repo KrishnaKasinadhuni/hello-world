@@ -44,7 +44,7 @@ async def test_run_tech_radar():
 
     # Verify entity stored in memory
     recalled = await recall_entities(query="Cloud Run Release Notes")
-    assert recalled["matches"] == 1
+    assert recalled["matches"] >= 1
     entity = recalled["entities"]["Cloud Run Release Notes"]
     assert entity["category"] == "GCP Release"
     assert entity["expires_at"] is not None

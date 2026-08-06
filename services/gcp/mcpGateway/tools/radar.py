@@ -6,7 +6,7 @@ from tools.memory import remember_entity, sanitize_text
 async def run_tech_radar(
     urls: List[str],
     category: str = "Tech Intelligence",
-    ttl_days: int = 90
+    ttl_days: int = 30
 ) -> Dict[str, Any]:
     """
     Executes a Tech Intelligence Radar pass across target URLs, indexing updates into persistent memory with retention TTL.
@@ -14,7 +14,7 @@ async def run_tech_radar(
     Args:
         urls: List of web URLs to monitor (e.g. release notes, product blogs, doc pages).
         category: Memory entity category tag (default 'Tech Intelligence').
-        ttl_days: Retention period in days for intelligence entries (default 90 days).
+        ttl_days: Retention period in days for intelligence entries (default 30 days).
     """
     results = []
     indexed_entities = []

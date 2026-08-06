@@ -46,7 +46,7 @@ curl -X POST https://mcp-gateway-boq6jlznga-uc.a.run.app/api/tools/call \
         "https://fastapi.tiangolo.com/release-notes/"
       ],
       "category": "Core Stack Updates",
-      "ttl_days": 90
+      "ttl_days": 30
     }
   }'
 ```

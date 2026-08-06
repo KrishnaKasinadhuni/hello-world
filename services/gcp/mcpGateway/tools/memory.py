@@ -7,7 +7,7 @@ from google.cloud import storage
 
 GCS_BUCKET_NAME = os.getenv("MEMORY_GCS_BUCKET", "mcp-memory-precise-works-456015-h9")
 LOCAL_MEMORY_FILE = os.getenv("LOCAL_MEMORY_FILE", "/tmp/mcp_memory.json")
-DEFAULT_RETENTION_DAYS = int(os.getenv("MEMORY_RETENTION_DAYS", "90"))
+DEFAULT_RETENTION_DAYS = int(os.getenv("MEMORY_RETENTION_DAYS", "30"))
 
 # Secret and Credential Sanitization Regexes
 SECRET_PATTERNS = [
@@ -88,7 +88,7 @@ async def remember_entity(
         name: Name of the entity (e.g., 'GCP Cloud Run', 'Krishna').
         category: Type/category (e.g., 'Infrastructure', 'Developer').
         observations: List of factual facts or notes about the entity.
-        ttl_days: Retention period in days (default 90 days). Set None for infinite.
+        ttl_days: Retention period in days (default 30 days). Set None for infinite.
         pinned: If True, prevents automatic expiration pruning.
     """
     memory = _load_memory()
