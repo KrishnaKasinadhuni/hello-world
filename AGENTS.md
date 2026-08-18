@@ -5,8 +5,8 @@ This document provides canonical repository-wide instructions for AI coding assi
 ---
 
 ## 📅 Last Reviewed
-- **Date:** 2026-07-22
-- **Areas Inspected:** `frontend/`, `reverse-image-search-aws/` (`backend/`, `frontend/`, `infrastructure/`), `cdk-patterns/` (Express mode updated), `services/` (`aws/`, `nodejs/`, `python/`, `curls/`), `mcp-gateway-instructions/`.
+- **Date:** 2026-08-08
+- **Areas Inspected:** `frontend/`, `reverse-image-search-aws/` (`backend/`, `frontend/`, `infrastructure/`), `cdk-patterns/` (Express mode updated), `services/` (`aws/`, `nodejs/`, `python/` (`logAnalyzer/`, `configManager/`, `ebookConverter/`), `curls/`), `mcp-gateway-instructions/`.
 
 ---
 
@@ -27,7 +27,8 @@ hello-world/
 │   ├── nodejs/imageClassification/   # [WORKING POC] Node.js + Hapi + Cohere AI REST service
 │   ├── python/
 │   │   ├── logAnalyzer/              # [WORKING POC] Python ML log analyzer (Dockerized)
-│   │   └── configManager/            # [WORKING POC] Python config manager (Dockerized)
+│   │   ├── configManager/            # [WORKING POC] Python config manager (Dockerized)
+│   │   └── ebookConverter/           # [WORKING TOOL] Python MOBI to EPUB extractor & converter tool
 │   ├── gcp/mcpGateway/               # [WORKING] GCP Cloud Run Remote MCP Gateway (FastAPI + Google OAuth)
 │   └── curls/
 │       └── helloworld-apigw.sh       # [WORKING] Sample script querying API Gateway
@@ -52,6 +53,7 @@ hello-world/
 | `services/nodejs/imageClassification/` | Node.js v18+, Hapi, Cohere SDK | Working POC | Node backend powering Cohere AI image uploads & similarity. Target of `frontend/` proxy. |
 | `services/python/logAnalyzer/` | Python, scikit-learn, Docker | Working POC | Log anomaly detection microservice. |
 | `services/python/configManager/` | Python, Docker | Working POC | Configuration management service. |
+| `services/python/ebookConverter/` | Python 3.9+, Calibre CLI | Working Tool | MOBI to EPUB ZIP extraction & ebook converter tool. |
 | `services/gcp/mcpGateway/` | Python 3.11, FastAPI, Google OAuth 2.0 | Working Service | Remote MCP Gateway on GCP Cloud Run with SSE & FastMCP tools. |
 | `services/curls/` | Bash, AWS CLI | Reference Script | Shell scripts testing external AWS API Gateway endpoints. |
 | `mcp-gateway-instructions/` | Markdown | Docs-Only | 6-phase instruction set for building an MCP Gateway. Contains NO executable code. |

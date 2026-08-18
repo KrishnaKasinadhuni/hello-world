@@ -32,7 +32,8 @@ hello-world/
 │   │   └── imageClassification/      # Node.js + Hapi + Cohere AI image classifier (working POC)
 │   ├── python/
 │   │   ├── logAnalyzer/              # Python ML log analyzer (working POC, Dockerized)
-│   │   └── configManager/            # Python config manager service (working POC, Dockerized)
+│   │   ├── configManager/            # Python config manager service (working POC, Dockerized)
+│   │   └── ebookConverter/           # Python MOBI to EPUB ZIP extractor & converter tool (working tool)
 │   └── curls/
 │       └── helloworld-apigw.sh       # Curl snippet for a deployed API Gateway endpoint
 └── mcp-gateway-instructions/         # Structured agent-readable instructions for building an MCP Gateway

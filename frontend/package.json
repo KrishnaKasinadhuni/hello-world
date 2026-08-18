@@ -31,9 +31,14 @@
     "ws": "^8.18.0",
     "nth-check": "^2.1.1",
     "postcss": "^8.5.2",
-    "serialize-javascript": "^6.0.2",
+    "serialize-javascript": "^7.0.5",
     "shell-quote": "^1.8.2",
-    "underscore": "^1.13.7"
+    "underscore": "^1.13.7",
+    "nanoid": "^3.3.8",
+    "svgo": "^3.3.2",
+    "webpack-dev-server": "^5.2.1",
+    "uuid": "^9.0.1",
+    "@tootallnate/once": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
