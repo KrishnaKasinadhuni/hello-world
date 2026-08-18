@@ -1,0 +1,20 @@
+# Python cache & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+*.so
+
+# Environments & OS files
+.env
+.env.local
+.DS_Store
+Thumbs.db
+
+# Build & Dependency Artifacts
+node_modules/
+dist/
+build/
+*.log
