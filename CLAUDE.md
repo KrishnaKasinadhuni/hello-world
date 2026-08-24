@@ -12,7 +12,9 @@ This file provides concise project instructions for Claude, aligned with canonic
 - `reverse-image-search-aws/frontend/` & `infrastructure/` — **[SCAFFOLDS]** Placeholders only.
 - `cdk-patterns/` — **[SCAFFOLD]** AWS CDK TypeScript app. Active DynamoDB work on `feat/cdk-dynamo`.
 - `services/python/logAnalyzer/` & `configManager/` — **[WORKING POCs]** Python Docker microservices.
-- `services/aws/iam-setup/` — **[WORKING TOOLING]** IAM role assumption scripts (`admin-access-role`).
+- `services/gcp/mcpGateway/` — **[WORKING SERVICE]** Remote MCP Gateway on GCP Cloud Run.
+- `services/blockchain/node/` — **[WORKING POC]** Rust 1.93 PoW node engine & REST/RPC API (Port 3002).
+- `services/blockchain/client/` — **[WORKING POC]** TypeScript 7.0 + React 19 Web Explorer UI (Port 3003).
 - `mcp-gateway-instructions/` — **[DOCS-ONLY]** 6-phase guide for building an MCP Gateway. No executable code.
 
 ---
@@ -23,6 +25,12 @@ This file provides concise project instructions for Claude, aligned with canonic
 # Frontend UI
 cd frontend && npm start                     # Dev server (http://localhost:3001)
 cd frontend && npm test -- --watchAll=false  # Unit tests
+
+# Blockchain Subproject
+cd services/blockchain/node && cargo check && cargo test # Rust node tests
+cd services/blockchain/node && cargo run                # Rust node server (http://localhost:3002)
+cd services/blockchain/client && npm test && npm run build # TS 7 client build
+cd services/blockchain/client && npm run dev            # TS 7 web UI (http://localhost:3003)
 
 # Node.js Image Service
 cd services/nodejs/imageClassification && npm run dev   # Server (http://localhost:3000)
@@ -47,4 +55,4 @@ refresh-admin # or ./services/aws/iam-setup/scripts/assume-role.sh
 2. **Scaffolds:** Mark scaffolding explicitly (`reverse-image-search-aws/frontend/`, `infrastructure/`, `cdk-patterns/`). Do not assume scaffold directories contain working code.
 3. **Secrets:** Never hardcode AWS keys, API keys, or tokens. Use `.env` files based on `.env.example`.
 4. **Proxy Compatibility:** `frontend/` proxies API calls (`/api/upload`, `/api/classify`, `/api/similar`) to `services/nodejs/imageClassification/` on port 3000. Do not break these signatures.
-5. **Docs Update:** Keep `README.md`, `AGENTS.md`, and `CLAUDE.md` updated when subprojects or commands change.
+5. **Changelog & Docs Update:** Keep `CHANGELOG.md` updated on every push to `main` or PR. Keep `README.md`, `AGENTS.md`, and `CLAUDE.md` updated when subprojects or commands change.

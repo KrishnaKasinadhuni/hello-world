@@ -5,8 +5,9 @@ This document provides canonical repository-wide instructions for AI coding assi
 ---
 
 ## 📅 Last Reviewed
-- **Date:** 2026-08-08
-- **Areas Inspected:** `frontend/`, `reverse-image-search-aws/` (`backend/`, `frontend/`, `infrastructure/`), `cdk-patterns/` (Express mode updated), `services/` (`aws/`, `nodejs/`, `python/` (`logAnalyzer/`, `configManager/`, `ebookConverter/`), `curls/`), `mcp-gateway-instructions/`.
+## 📅 Last Reviewed
+- **Date:** 2026-08-22
+- **Areas Inspected:** `services/blockchain/` (`node/`, `client/`), `frontend/`, `reverse-image-search-aws/` (`backend/`, `frontend/`, `infrastructure/`), `cdk-patterns/`, `services/` (`aws/`, `nodejs/`, `python/`, `gcp/mcpGateway/`, `curls/`), `mcp-gateway-instructions/`.
 
 ---
 
@@ -30,6 +31,9 @@ hello-world/
 │   │   ├── configManager/            # [WORKING POC] Python config manager (Dockerized)
 │   │   └── ebookConverter/           # [WORKING TOOL] Python MOBI to EPUB extractor & converter tool
 │   ├── gcp/mcpGateway/               # [WORKING] GCP Cloud Run Remote MCP Gateway (FastAPI + Google OAuth)
+│   ├── blockchain/                   # [WORKING POC] Rust 1.93 node + TypeScript 7 SDK & Web Explorer UI
+│   │   ├── node/                     #   → Axum/Tokio RPC node engine (PoW mining, SHA-256 blocks, ledger)
+│   │   └── client/                   #   → TypeScript 7 + React 19 web dashboard & client SDK
 │   └── curls/
 │       └── helloworld-apigw.sh       # [WORKING] Sample script querying API Gateway
 ├── mcp-gateway-instructions/         # [DOCS-ONLY] Step-by-step instructions for building an MCP Gateway
@@ -55,6 +59,8 @@ hello-world/
 | `services/python/configManager/` | Python, Docker | Working POC | Configuration management service. |
 | `services/python/ebookConverter/` | Python 3.9+, Calibre CLI | Working Tool | MOBI to EPUB ZIP extraction & ebook converter tool. |
 | `services/gcp/mcpGateway/` | Python 3.11, FastAPI, Google OAuth 2.0 | Working Service | Remote MCP Gateway on GCP Cloud Run with SSE & FastMCP tools. |
+| `services/blockchain/node/` | Rust 1.93+, Tokio, Axum, Serde, sha2 | Working POC | PoW Blockchain node engine & RPC API (Port 3002). |
+| `services/blockchain/client/` | TypeScript 7.0+, React 19, Vite | Working POC | Blockchain Web Explorer UI & TypeScript 7 client SDK (Port 3003). |
 | `services/curls/` | Bash, AWS CLI | Reference Script | Shell scripts testing external AWS API Gateway endpoints. |
 | `mcp-gateway-instructions/` | Markdown | Docs-Only | 6-phase instruction set for building an MCP Gateway. Contains NO executable code. |
 
@@ -86,6 +92,13 @@ Before finishing any task, run the appropriate validation commands:
   ```bash
   python3 -m py_compile main.py
   ```
+- **Blockchain Core & Client (`services/blockchain/`):**
+  ```bash
+  # Rust node checks & unit tests
+  cd services/blockchain/node && cargo check && cargo test
+  # TypeScript 7 client typechecks & production build
+  cd services/blockchain/client && npm test && npm run build
+  ```
 - **CDK Infrastructure (`cdk-patterns/`):**
   ```bash
   cd cdk-patterns && npm run build && npm test
@@ -97,9 +110,10 @@ See [docs/validation.md](file:///Users/krishnakasinadhuni/projects/hello-world/d
 
 ---
 
-## 📝 Documentation Update Policy
+## 📝 Documentation & Changelog Update Policy
 
-Whenever repository structure, commands, or subproject statuses change:
-1. Update `README.md` to reflect new services or changed features.
-2. Update `AGENTS.md` (and `CLAUDE.md`) under the "Last Reviewed" section with the date and revised map.
-3. Update relevant `.cursor/rules/` and `docs/` files if architectural boundaries change.
+Whenever repository structure, commands, subproject statuses change, or when pushing to `main` or creating a Pull Request:
+1. Update `CHANGELOG.md` in the root repository under `[Unreleased]` with a summary of added/changed/fixed features.
+2. Update `README.md` to reflect new services or changed features.
+3. Update `AGENTS.md` (and `CLAUDE.md`) under the "Last Reviewed" section with the date and revised map.
+4. Update relevant `.cursor/rules/` and `docs/` files if architectural boundaries change.

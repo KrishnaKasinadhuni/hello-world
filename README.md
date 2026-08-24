@@ -34,6 +34,9 @@ hello-world/
 │   │   ├── logAnalyzer/              # Python ML log analyzer (working POC, Dockerized)
 │   │   ├── configManager/            # Python config manager service (working POC, Dockerized)
 │   │   └── ebookConverter/           # Python MOBI to EPUB ZIP extractor & converter tool (working tool)
+│   ├── blockchain/                   # [WORKING POC] Rust (1.93) PoW node + TypeScript 7 SDK & Web Explorer
+│   │   ├── node/                     #   → Rust Axum/Tokio RPC engine (SHA-256 blocks, state ledger, mining)
+│   │   └── client/                   #   → TypeScript 7 + React 19 web dashboard & client SDK
 │   └── curls/
 │       └── helloworld-apigw.sh       # Curl snippet for a deployed API Gateway endpoint
 └── mcp-gateway-instructions/         # Structured agent-readable instructions for building an MCP Gateway
@@ -259,6 +262,27 @@ The shell script that assumes `admin-access-role` (ARN: `arn:aws:iam::9080274152
 
 ---
 
+### 10. `services/blockchain/` — Rust & TypeScript 7 P2P Blockchain
+**Status:** ✅ Working POC (Multi-node engine & Web Explorer)  
+**Stack:** Rust 1.93+ (Tokio, Axum, Serde, reqwest, sha2), TypeScript 7.0+, React 19, Vite  
+**What it does:** A full-stack Proof-of-Work blockchain ecosystem featuring a Rust P2P node engine and a TypeScript 7 web explorer. Supports block mining, mempool queueing, account balance tracking, P2P peer discovery, real-time block/tx gossip propagation, Nakamoto longest valid chain consensus conflict resolution, Address Inspector, Transaction Inspector, Miner Leaderboard, and Throughput / Mempool aging analytics.
+
+**To run single node & client:**
+```bash
+# Terminal 1: Rust node (http://localhost:3002)
+cd services/blockchain/node && cargo run
+
+# Terminal 2: TS 7 Client UI (http://localhost:3003)
+cd services/blockchain/client && npm run dev
+```
+
+**To run 2-Node P2P cluster:**
+```bash
+./services/blockchain/scripts/start-cluster.sh
+```
+
+---
+
 ## 🔧 AWS Account & Infrastructure Context
 
 | Resource | Value |
@@ -284,6 +308,8 @@ The shell script that assumes `admin-access-role` (ARN: `arn:aws:iam::9080274152
 | `services/nodejs/imageClassification/` | Node.js API | ✅ Working POC |
 | `services/python/logAnalyzer/` | Python ML | ✅ Working POC |
 | `services/python/configManager/` | Python service | ✅ Working POC |
+| `services/gcp/mcpGateway/` | Cloud Run Service | ✅ Working Service |
+| `services/blockchain/` | Rust & TS 7 Blockchain | ✅ Working POC (Multi-node P2P & Explorer) |
 | `services/aws/iam-setup/` | Bash scripts | ✅ In active use |
 | `services/curls/` | Shell scripts | ✅ Reference |
 | `mcp-gateway-instructions/` | Agent instructions | ✅ Complete instruction set |
