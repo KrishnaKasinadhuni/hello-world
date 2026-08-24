@@ -1,0 +1,58 @@
+services:
+  # Primary Blockchain Node (Node A)
+  blockchain-node-a:
+    image: blockchain-node:${NODE_VERSION:-0.1.0}
+    build:
+      context: ./node
+      dockerfile: Dockerfile
+      args:
+        VERSION: ${NODE_VERSION:-0.1.0}
+    container_name: blockchain-node-a
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - CHAIN_DIFFICULTY=2
+      - MINING_REWARD=50
+      - PEERS=http://blockchain-node-b:3004
+    networks:
+      - blockchain-mesh
+
+  # Secondary Blockchain Node (Node B - Peered with Node A)
+  blockchain-node-b:
+    image: blockchain-node:${NODE_VERSION:-0.1.0}
+    build:
+      context: ./node
+      dockerfile: Dockerfile
+      args:
+        VERSION: ${NODE_VERSION:-0.1.0}
+    container_name: blockchain-node-b
+    ports:
+      - "3004:3004"
+    environment:
+      - PORT=3004
+      - CHAIN_DIFFICULTY=2
+      - MINING_REWARD=50
+      - PEERS=http://blockchain-node-a:3002
+    networks:
+      - blockchain-mesh
+
+  # TypeScript 7 Web Client & Explorer
+  blockchain-client:
+    image: blockchain-client:${CLIENT_VERSION:-0.1.0}
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        VERSION: ${CLIENT_VERSION:-0.1.0}
+    container_name: blockchain-client
+    ports:
+      - "3003:8080"
+    depends_on:
+      - blockchain-node-a
+    networks:
+      - blockchain-mesh
+
+networks:
+  blockchain-mesh:
+    driver: bridge
