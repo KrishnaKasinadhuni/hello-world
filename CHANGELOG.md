@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **[aws-ecr]**: Added declarative AWS CDK `EcrStack` in `cdk-patterns/lib/ecr-stack.ts` with unit tests (`test/ecr.test.ts`) provisioning 4 core microservice repositories (`hello-world/image-classification`, `hello-world/log-analyzer`, `hello-world/config-manager`, `hello-world/reverse-image-search-backend`) with `scanOnPush`, AES256 encryption, and 7-day untagged / 10-image retention lifecycle policies.
+- **[aws-ecr]**: Added `services/aws/scripts/ecr-pipeline.sh` automation CLI for AWS ECR authentication, repository setup, multi-platform Docker container builds (`linux/amd64`), and automated tagging/pushing (`:latest`, `:<git-sha>`).
+- **[aws-ecr]**: Successfully built and published container images for all 4 core microservices to Amazon ECR registry `908027415245.dkr.ecr.us-east-1.amazonaws.com`.
 - **[blockchain]**: Implemented **Semantic Versioning (SemVer)** for Docker container images (`blockchain-node:${VERSION}`, `blockchain-client:${VERSION}`) with OCI version labels and build args.
 - **[blockchain]**: Added modern production **Dockerfiles & `docker-compose.yml`** for both Rust node (multi-stage `cargo-chef` layer caching, non-root `appuser`, healthchecks) and TypeScript 7 client (unprivileged Nginx, gzip compression, security headers, immutable caching).
 - **[blockchain]**: Added **Multi-Node Peer-to-Peer (P2P) Network & Nakamoto Consensus Layer** (`peer.rs`, `consensus.rs`, `gossip.rs`): peer discovery, P2P block & transaction gossip propagation, and longest valid chain conflict resolution.

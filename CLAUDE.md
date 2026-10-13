@@ -10,7 +10,8 @@ This file provides concise project instructions for Claude, aligned with canonic
 - `services/nodejs/imageClassification/` — **[WORKING POC]** Node.js + Hapi + Cohere AI backend.
 - `reverse-image-search-aws/backend/` — **[PARTIAL POC]** FastAPI + Bedrock embedding engine (S3 works, OpenSearch stubbed in `app/search.py`).
 - `reverse-image-search-aws/frontend/` & `infrastructure/` — **[SCAFFOLDS]** Placeholders only.
-- `cdk-patterns/` — **[SCAFFOLD]** AWS CDK TypeScript app. Active DynamoDB work on `feat/cdk-dynamo`.
+- `cdk-patterns/` — **[WORKING & SCAFFOLD]** AWS CDK TypeScript app (`ConfigDevBucket`, `HelloWorldEcrStack`). Active DynamoDB work on `feat/cdk-dynamo`.
+- `services/aws/scripts/ecr-pipeline.sh` — **[WORKING TOOL]** ECR repository provisioning, Docker builds, and image uploads.
 - `services/python/logAnalyzer/` & `configManager/` — **[WORKING POCs]** Python Docker microservices.
 - `services/gcp/mcpGateway/` — **[WORKING SERVICE]** Remote MCP Gateway on GCP Cloud Run.
 - `services/blockchain/node/` — **[WORKING POC]** Rust 1.93 PoW node engine & REST/RPC API (Port 3002).
@@ -42,6 +43,10 @@ cd reverse-image-search-aws/backend && python main.py    # FastAPI (http://local
 cd cdk-patterns && npm run build && npm run synth
 cd cdk-patterns && npm run deploy:dev   # Express mode (rapid iteration, rollback disabled)
 cd cdk-patterns && npm run deploy:prod  # Standard mode (production safe)
+
+# AWS ECR Pipeline
+./services/aws/scripts/ecr-pipeline.sh status
+./services/aws/scripts/ecr-pipeline.sh build-push [service_key|all]
 
 # AWS Role Refresh
 refresh-admin # or ./services/aws/iam-setup/scripts/assume-role.sh

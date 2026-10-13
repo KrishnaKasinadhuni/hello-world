@@ -5,9 +5,8 @@ This document provides canonical repository-wide instructions for AI coding assi
 ---
 
 ## 📅 Last Reviewed
-## 📅 Last Reviewed
-- **Date:** 2026-08-22
-- **Areas Inspected:** `services/blockchain/` (`node/`, `client/`), `frontend/`, `reverse-image-search-aws/` (`backend/`, `frontend/`, `infrastructure/`), `cdk-patterns/`, `services/` (`aws/`, `nodejs/`, `python/`, `gcp/mcpGateway/`, `curls/`), `mcp-gateway-instructions/`.
+- **Date:** 2026-10-10
+- **Areas Inspected:** `services/aws/scripts/ecr-pipeline.sh`, `cdk-patterns/` (`lib/ecr-stack.ts`, `test/ecr.test.ts`), `services/blockchain/` (`node/`, `client/`), `frontend/`, `reverse-image-search-aws/` (`backend/`, `frontend/`, `infrastructure/`), `services/` (`aws/`, `nodejs/`, `python/`, `gcp/mcpGateway/`, `curls/`), `mcp-gateway-instructions/`.
 
 ---
 
@@ -22,9 +21,12 @@ hello-world/
 │   ├── backend/                      #   → FastAPI app (S3/Bedrock working, OpenSearch stubbed)
 │   ├── frontend/                     #   → [SCAFFOLD] React UI placeholder
 │   └── infrastructure/               #   → [SCAFFOLD] AWS CDK TypeScript stack placeholder
-├── cdk-patterns/                     # [SCAFFOLD] AWS CDK TypeScript boilerplate stack (supports Express mode)
+├── cdk-patterns/                     # [SCAFFOLD] AWS CDK TypeScript stacks (S3 config, ECR repository stack)
 ├── services/
-│   ├── aws/iam-setup/                # [WORKING] AWS IAM admin setup & assume-role scripts
+│   ├── aws/
+│   │   ├── iam-setup/                # [WORKING] AWS IAM admin setup & assume-role scripts
+│   │   └── scripts/
+│   │       └── ecr-pipeline.sh       # [WORKING TOOL] AWS ECR provisioning, build & push automation
 │   ├── nodejs/imageClassification/   # [WORKING POC] Node.js + Hapi + Cohere AI REST service
 │   ├── python/
 │   │   ├── logAnalyzer/              # [WORKING POC] Python ML log analyzer (Dockerized)
@@ -52,8 +54,9 @@ hello-world/
 | `reverse-image-search-aws/backend/` | Python 3.10+, FastAPI, boto3, Pillow | Partial POC | AWS Bedrock Titan embedding + S3 indexing. *Note: OpenSearch functions in `app/search.py` are stubs.* |
 | `reverse-image-search-aws/frontend/` | README only | Scaffold | Planned dedicated reverse image search frontend. Do not assume working React code here. |
 | `reverse-image-search-aws/infrastructure/` | AWS CDK, TypeScript | Scaffold | Planned AWS resource provisioning. Currently initialized empty CDK app. |
-| `cdk-patterns/` | AWS CDK v2, TypeScript | Scaffold | Infrastructure pattern playground. Supports `npm run deploy:dev` (Express Mode) & `npm run deploy:prod` (Standard Mode). Active work on `feat/cdk-dynamo`. |
+| `cdk-patterns/` | AWS CDK v2, TypeScript | Working & Scaffold | Infrastructure patterns: S3 config bucket + `EcrStack` (4 core microservice repositories). |
 | `services/aws/iam-setup/` | Bash, AWS CLI | Working Tooling | System admin IAM role assumption (`admin-access-role`). Used by `assume-role.sh`. |
+| `services/aws/scripts/` | Bash, Docker, AWS CLI | Working Tooling | ECR pipeline script (`ecr-pipeline.sh`) for setup, build, and pushing images. |
 | `services/nodejs/imageClassification/` | Node.js v18+, Hapi, Cohere SDK | Working POC | Node backend powering Cohere AI image uploads & similarity. Target of `frontend/` proxy. |
 | `services/python/logAnalyzer/` | Python, scikit-learn, Docker | Working POC | Log anomaly detection microservice. |
 | `services/python/configManager/` | Python, Docker | Working POC | Configuration management service. |
@@ -105,6 +108,12 @@ Before finishing any task, run the appropriate validation commands:
   # Dev deployment (Express mode): cd cdk-patterns && npm run deploy:dev
   # Prod deployment (Standard mode): cd cdk-patterns && npm run deploy:prod
   ```
+- **AWS ECR Pipeline (`services/aws/scripts/`):**
+  ```bash
+  ./services/aws/scripts/ecr-pipeline.sh status
+  ./services/aws/scripts/ecr-pipeline.sh build-push [service_key|all]
+  ```
+
 
 See [docs/validation.md](file:///Users/krishnakasinadhuni/projects/hello-world/docs/validation.md) for complete details.
 

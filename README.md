@@ -24,10 +24,12 @@ hello-world/
 │   ├── backend/                      #   → FastAPI + Bedrock + OpenSearch (working core, placeholders in search)
 │   ├── frontend/                     #   → scaffold only (not implemented)
 │   └── infrastructure/               #   → AWS CDK scaffold (not implemented)
-├── cdk-patterns/                     # CDK TypeScript boilerplate (blank stack, scaffold for patterns)
+├── cdk-patterns/                     # AWS CDK TypeScript stacks (S3 config bucket, ECR repositories stack)
 ├── services/
 │   ├── aws/
-│   │   └── iam-setup/                # AWS IAM scripts: user/role/group setup + assume-role.sh
+│   │   ├── iam-setup/                # AWS IAM scripts: user/role/group setup + assume-role.sh
+│   │   └── scripts/
+│   │       └── ecr-pipeline.sh       # AWS ECR provisioning, Docker build & upload pipeline
 │   ├── nodejs/
 │   │   └── imageClassification/      # Node.js + Hapi + Cohere AI image classifier (working POC)
 │   ├── python/
@@ -236,7 +238,30 @@ The shell script that assumes `admin-access-role` (ARN: `arn:aws:iam::9080274152
 
 ---
 
-### 8. `services/curls/helloworld-apigw.sh` — API Gateway Curl Snippet
+### 8. `services/aws/scripts/ecr-pipeline.sh` & `cdk-patterns` ECR Stack — AWS ECR Publishing
+**Status:** ✅ Implemented and published to ECR  
+**What it does:** Complete workflow for managing AWS ECR repositories and publishing production Docker containers for all core microservices.
+
+**Target ECR Repositories (AWS Account `908027415245`, `us-east-1`):**
+- `hello-world/image-classification`
+- `hello-world/log-analyzer`
+- `hello-world/config-manager`
+- `hello-world/reverse-image-search-backend`
+
+**Features:**
+- **CDK Stack (`cdk-patterns/lib/ecr-stack.ts`):** Declarative IaC with `scanOnPush: true`, AES256 encryption, 7-day untagged expiration, and 10-image max retention.
+- **Pipeline Script (`services/aws/scripts/ecr-pipeline.sh`):** Automates repository creation, Docker registry authentication, multi-platform builds (`linux/amd64`), and image tagging (`:latest` and `:<git-sha>`).
+- **Commands:**
+  ```bash
+  ./services/aws/scripts/ecr-pipeline.sh status
+  ./services/aws/scripts/ecr-pipeline.sh setup
+  ./services/aws/scripts/ecr-pipeline.sh login
+  ./services/aws/scripts/ecr-pipeline.sh build-push [service_key|all]
+  ```
+
+---
+
+### 9. `services/curls/helloworld-apigw.sh` — API Gateway Curl Snippet
 **Status:** ✅ Reference script  
 **What it does:** Fetches an API key from AWS Secrets Manager and calls a deployed API Gateway endpoint.  
 **Endpoint:** `https://9se90ih4xg.execute-api.us-east-2.amazonaws.com/dev/`  
@@ -244,7 +269,7 @@ The shell script that assumes `admin-access-role` (ARN: `arn:aws:iam::9080274152
 
 ---
 
-### 9. `mcp-gateway-instructions/` — MCP Gateway Agent Instructions
+### 10. `mcp-gateway-instructions/` — MCP Gateway Agent Instructions
 **Status:** 📋 Instruction set — no code, fully agent-readable  
 **What it is:** A 6-phase, numbered markdown instruction set designed for AI agents to build a complete **MCP (Model Context Protocol) Gateway** from scratch.
 
@@ -311,6 +336,7 @@ cd services/blockchain/client && npm run dev
 | `services/gcp/mcpGateway/` | Cloud Run Service | ✅ Working Service |
 | `services/blockchain/` | Rust & TS 7 Blockchain | ✅ Working POC (Multi-node P2P & Explorer) |
 | `services/aws/iam-setup/` | Bash scripts | ✅ In active use |
+| `services/aws/scripts/` | ECR Pipeline & Docker | ✅ In active use |
 | `services/curls/` | Shell scripts | ✅ Reference |
 | `mcp-gateway-instructions/` | Agent instructions | ✅ Complete instruction set |
 
