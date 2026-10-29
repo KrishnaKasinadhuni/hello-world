@@ -35,19 +35,19 @@
 - **Local Repo Path**: `/Users/krishnakasinadhuni/projects/hello-world`
 - **Subproject Path**: `/Users/krishnakasinadhuni/projects/hello-world/quest-tennis-trainer`
 - **Active Git Branch**: `feat/quest-tennis-trainer`
-- **Completed & Committed Files (Sessions 1 & 2)**:
+- **Completed & Committed Files (Sessions 1, 2 & 3)**:
   - `quest-tennis-trainer/README.md` — Architecture overview and 5-session roadmap.
   - `quest-tennis-trainer/.gitignore` — Unity 6, C#, and Meta Quest `.apk`/`.aab` ignore rules.
   - `quest-tennis-trainer/Assets/_Project/Core/TennisPhysicsConfig.cs` — Pure C# struct with 120 Hz timing, ITF ball constants, drag/Magnus coefficients, stringbed restitution, and room-scale reach parameters.
   - `quest-tennis-trainer/Assets/_Project/Physics/BallAerodynamics.cs` — Pure C# / Unity aerodynamic solver for gravity, air drag, Magnus spin curve, and court/wall bounce restitution.
   - `quest-tennis-trainer/Assets/_Project/Physics/SweptRacketCollider.cs` — 120 Hz 10-substep Hermite spline collision detector with stringbed sweet-spot vs frame restitution, tangential friction, and topspin/slice/kick spin calculation.
+  - `quest-tennis-trainer/Assets/_Project/TrainingModes/WallPractice/TennisWallController.cs` — Backboard controller with 0.914m net-line fault detection, target zones, vertical topspin reflection, and Smart Return Funnel (85% true angle + 15% center assist).
+  - `quest-tennis-trainer/Assets/_Project/XR_Input/RacketHapticsController.cs` — Parametric OpenXR/Quest 3 haptics controller (200 Hz sweet-spot pulse, 75 Hz frame mishit vibration, and 100 Hz serve toss micro-tick).
 
 ## 5. Remaining Build Roadmap (Next Sessions)
 - **[x] Session 1 — Repo Foundation & Physics Constants** (Done)
 - **[x] Session 2 — Core Ball Aerodynamics & Swept Racket Physics** (Done)
-- **[ ] Session 3 — Tennis Wall & Haptics**:
-  - Create `quest-tennis-trainer/Assets/_Project/TrainingModes/WallPractice/TennisWallController.cs` (net-line fault detection, target zones, and Smart Return Funnel).
-  - Create `quest-tennis-trainer/Assets/_Project/XR_Input/RacketHapticsController.cs` (sweet-spot vs. frame vibration and serve toss tick).
+- **[x] Session 3 — Tennis Wall & Haptics** (Done)
 - **[ ] Session 4 — Programmable Ball Machine & Serve Practice**:
   - Create `quest-tennis-trainer/Assets/_Project/TrainingModes/BallMachine/BallMachineController.cs` (ballistic trajectory solver constrained to $\pm 1.2\text{m}$ room-scale reach + drill presets).
   - Create `quest-tennis-trainer/Assets/_Project/TrainingModes/ServeTrainer/ServeTossController.cs` (two-handed toss release, behind-the-back IMU pose smoothing, service box radar/fault telemetry).
@@ -59,4 +59,4 @@
 
 > We are building `quest-tennis-trainer` inside `/Users/krishnakasinadhuni/projects/hello-world/quest-tennis-trainer` on the `feat/quest-tennis-trainer` branch.
 > First, read `quest-tennis-trainer/README.md`, `quest-tennis-trainer/ANTIGRAVITY_HANDOFF.md`, and `quest-tennis-trainer/Assets/_Project/Core/TennisPhysicsConfig.cs`.
-> To conserve AI Pro credits, only work on **one session at a time (2–3 files max)** and wait for my confirmation before moving to the next session. Let's start **Session 3** now by implementing `TennisWallController.cs` and `RacketHapticsController.cs`.
+> To conserve AI Pro credits, only work on **one session at a time (2–3 files max)** and wait for my confirmation before moving to the next session. Let's start **Session 4** now by implementing `BallMachineController.cs` and `ServeTossController.cs`.
