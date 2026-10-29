@@ -32,8 +32,8 @@
   - Serve Toss Release: Subtle micro-tick (`100 Hz`, `5 ms`) as the ball leaves virtual fingertips.
 
 ## 4. Current Repository State
-- **Local Repo Path**: `/Users/krishnakasinadhuni/Documents/local-projects/hello-world`
-- **Subproject Path**: `/Users/krishnakasinadhuni/Documents/local-projects/hello-world/quest-tennis-trainer`
+- **Local Repo Path**: `/Users/krishnakasinadhuni/projects/hello-world`
+- **Subproject Path**: `/Users/krishnakasinadhuni/projects/hello-world/quest-tennis-trainer`
 - **Active Git Branch**: `feat/quest-tennis-trainer`
 - **Completed & Committed Files (Sessions 1 & 2)**:
   - `quest-tennis-trainer/README.md` — Architecture overview and 5-session roadmap.
@@ -57,6 +57,6 @@
 
 ## 6. Prompt to Paste Directly into Antigravity
 
-> We are building `quest-tennis-trainer` inside `/Users/krishnakasinadhuni/Documents/local-projects/hello-world/quest-tennis-trainer` on the `feat/quest-tennis-trainer` branch.
+> We are building `quest-tennis-trainer` inside `/Users/krishnakasinadhuni/projects/hello-world/quest-tennis-trainer` on the `feat/quest-tennis-trainer` branch.
 > First, read `quest-tennis-trainer/README.md`, `quest-tennis-trainer/ANTIGRAVITY_HANDOFF.md`, and `quest-tennis-trainer/Assets/_Project/Core/TennisPhysicsConfig.cs`.
 > To conserve AI Pro credits, only work on **one session at a time (2–3 files max)** and wait for my confirmation before moving to the next session. Let's start **Session 3** now by implementing `TennisWallController.cs` and `RacketHapticsController.cs`.
