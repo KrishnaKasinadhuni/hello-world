@@ -34,4 +34,4 @@ To keep token and AI Pro credit usage low, development is split into 5 self-cont
 - **[x] Session 2 — Core Ball Aerodynamics & Swept Racket Physics**: Implement `BallAerodynamics.cs` (gravity + drag + Magnus spin curve) and `SweptRacketCollider.cs` (120 Hz 10-substep collision + stringbed spin generation).
 - **[x] Session 3 — Tennis Wall & Haptics**: Implement `TennisWallController.cs` (with Smart Return Funnel for 1–2 step movement) and `RacketHapticsController.cs` (sweet-spot vs. frame vibration).
 - **[x] Session 4 — Programmable Ball Machine & Serve Practice**: Implement `BallMachineController.cs` (ballistic trajectory solver) and `ServeTossController.cs` (toss release + serve box fault/radar tracker).
-- **[ ] Session 5 — GitHub Actions CI/CD & GCP Artifact Pipeline**: Add `.github/workflows/quest-tennis-ci.yml` with Workload Identity Federation for Google Cloud Storage / Artifact Registry.
+- **[x] Session 5 — GitHub Actions CI/CD & GCP Artifact Pipeline**: Add `TennisPhysicsTests.cs` NUnit suite and `.github/workflows/quest-tennis-ci.yml` with Workload Identity Federation for Google Cloud Storage / Artifact Registry.

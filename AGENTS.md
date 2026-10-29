@@ -5,8 +5,8 @@ This document provides canonical repository-wide instructions for AI coding assi
 ---
 
 ## 📅 Last Reviewed
-- **Date:** 2026-10-10
-- **Areas Inspected:** `services/aws/scripts/ecr-pipeline.sh`, `cdk-patterns/` (`lib/ecr-stack.ts`, `test/ecr.test.ts`), `services/blockchain/` (`node/`, `client/`), `frontend/`, `reverse-image-search-aws/` (`backend/`, `frontend/`, `infrastructure/`), `services/` (`aws/`, `nodejs/`, `python/`, `gcp/mcpGateway/`, `curls/`), `mcp-gateway-instructions/`.
+- **Date:** 2026-10-29
+- **Areas Inspected:** `quest-tennis-trainer/` (`Assets/_Project/**`, `.github/workflows/quest-tennis-ci.yml`), `services/aws/scripts/ecr-pipeline.sh`, `cdk-patterns/` (`lib/ecr-stack.ts`, `test/ecr.test.ts`), `services/blockchain/` (`node/`, `client/`), `frontend/`, `reverse-image-search-aws/` (`backend/`, `frontend/`, `infrastructure/`), `services/` (`aws/`, `nodejs/`, `python/`, `gcp/mcpGateway/`, `curls/`), `mcp-gateway-instructions/`.
 
 ---
 

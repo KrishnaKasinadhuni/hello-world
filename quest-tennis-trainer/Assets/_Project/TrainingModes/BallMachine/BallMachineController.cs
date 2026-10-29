@@ -345,3 +345,4 @@ namespace QuestTennisTrainer.TrainingModes.BallMachine
         }
     }
 }
+

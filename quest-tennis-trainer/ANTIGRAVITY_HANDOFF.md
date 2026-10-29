@@ -35,7 +35,7 @@
 - **Local Repo Path**: `/Users/krishnakasinadhuni/projects/hello-world`
 - **Subproject Path**: `/Users/krishnakasinadhuni/projects/hello-world/quest-tennis-trainer`
 - **Active Git Branch**: `feat/quest-tennis-trainer`
-- **Completed & Committed Files (Sessions 1, 2, 3 & 4)**:
+- **Completed & Committed Files (All 5 Sessions Complete)**:
   - `quest-tennis-trainer/README.md` — Architecture overview and 5-session roadmap.
   - `quest-tennis-trainer/.gitignore` — Unity 6, C#, and Meta Quest `.apk`/`.aab` ignore rules.
   - `quest-tennis-trainer/Assets/_Project/Core/TennisPhysicsConfig.cs` — Pure C# struct with 120 Hz timing, ITF ball constants, drag/Magnus coefficients, stringbed restitution, and room-scale reach parameters.
@@ -45,15 +45,15 @@
   - `quest-tennis-trainer/Assets/_Project/XR_Input/RacketHapticsController.cs` — Parametric OpenXR/Quest 3 haptics controller (200 Hz sweet-spot pulse, 75 Hz frame mishit vibration, and 100 Hz serve toss micro-tick).
   - `quest-tennis-trainer/Assets/_Project/TrainingModes/BallMachine/BallMachineController.cs` — Programmable ball machine constrained to Quest 3 Guardian & $\pm 1.2\text{m}$ room-scale reach, with drill presets, net clearance, and landing depth heatmap.
   - `quest-tennis-trainer/Assets/_Project/TrainingModes/ServeTrainer/ServeTossController.cs` — Two-handed serve trainer with velocity-smoothed toss release, apex predictor, 200 ms behind-the-back IMU occlusion compensation, and Deuce/Ad Wide/Body/T service box radar telemetry.
+  - `quest-tennis-trainer/Assets/_Project/Tests/TennisPhysicsTests.cs` — NUnit test suite covering 120 Hz invariants, Magnus dip/lift, wall rebound kick, Hermite spline accuracy, Smart Return Funnel, parametric haptics, ball machine clamping, and serve occlusion/service-box telemetry.
+  - `.github/workflows/quest-tennis-ci.yml` — Path-filtered GitHub Actions CI/CD workflow with GCP Workload Identity Federation for Quest 3 APK storage.
 
-## 5. Remaining Build Roadmap (Next Sessions)
+## 5. Remaining Build Roadmap (All Sessions Complete)
 - **[x] Session 1 — Repo Foundation & Physics Constants** (Done)
 - **[x] Session 2 — Core Ball Aerodynamics & Swept Racket Physics** (Done)
 - **[x] Session 3 — Tennis Wall & Haptics** (Done)
 - **[x] Session 4 — Programmable Ball Machine & Serve Practice** (Done)
-- **[ ] Session 5 — NUnit Physics Tests & GitHub Actions + GCP CI/CD**:
-  - Add fast `.NET` NUnit tests under `quest-tennis-trainer/Assets/_Project/Tests/`.
-  - Add `.github/workflows/quest-tennis-ci.yml` with path filters (`quest-tennis-trainer/**`) and GCP Workload Identity Federation for APK artifact storage.
+- **[x] Session 5 — NUnit Physics Tests & GitHub Actions + GCP CI/CD** (Done)
 
 ## 6. Prompt to Paste Directly into Antigravity
 

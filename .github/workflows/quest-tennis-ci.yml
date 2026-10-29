@@ -1,0 +1,118 @@
+name: Quest 3 Tennis Trainer CI & GCP Artifact Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/quest-tennis-trainer*"
+    paths:
+      - "quest-tennis-trainer/**"
+      - ".github/workflows/quest-tennis-ci.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "quest-tennis-trainer/**"
+      - ".github/workflows/quest-tennis-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # Required for Google Cloud Workload Identity Federation (keyless OIDC)
+
+env:
+  PROJECT_PATH: quest-tennis-trainer
+  UNITY_VERSION: 6000.0.23f1
+  GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  GCS_ARTIFACT_BUCKET: ${{ vars.GCS_QUEST_TENNIS_BUCKET }}
+
+jobs:
+  verify-physics-and-structure:
+    name: Validate C# Physics Architecture & 120Hz Invariants
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Verify Core C# Modules & NUnit Test Suite Exist
+        run: |
+          set -euo pipefail
+          REQUIRED_FILES=(
+            "$PROJECT_PATH/Assets/_Project/Core/TennisPhysicsConfig.cs"
+            "$PROJECT_PATH/Assets/_Project/Physics/BallAerodynamics.cs"
+            "$PROJECT_PATH/Assets/_Project/Physics/SweptRacketCollider.cs"
+            "$PROJECT_PATH/Assets/_Project/TrainingModes/WallPractice/TennisWallController.cs"
+            "$PROJECT_PATH/Assets/_Project/XR_Input/RacketHapticsController.cs"
+            "$PROJECT_PATH/Assets/_Project/TrainingModes/BallMachine/BallMachineController.cs"
+            "$PROJECT_PATH/Assets/_Project/TrainingModes/ServeTrainer/ServeTossController.cs"
+            "$PROJECT_PATH/Assets/_Project/Tests/TennisPhysicsTests.cs"
+          )
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [[ ! -f "$file" ]]; then
+              echo "ERROR: Missing required module: $file"
+              exit 1
+            fi
+            echo "Verified: $file"
+          done
+
+      - name: Verify 120Hz Sub-Step & Room-Scale Constants
+        run: |
+          grep -q "TargetFrameRateHz = 120f" "$PROJECT_PATH/Assets/_Project/Core/TennisPhysicsConfig.cs"
+          grep -q "CollisionSubSteps = 10" "$PROJECT_PATH/Assets/_Project/Core/TennisPhysicsConfig.cs"
+          grep -q "MaxLateralReachMeters = 1.20f" "$PROJECT_PATH/Assets/_Project/Core/TennisPhysicsConfig.cs"
+          grep -q "WallSmartFunnelBias = 0.15f" "$PROJECT_PATH/Assets/_Project/Core/TennisPhysicsConfig.cs"
+          echo "All 120Hz Quest 3 physics invariants verified."
+
+  build-and-upload-gcp:
+    name: Build Quest 3 APK & Upload to Google Cloud Storage
+    needs: verify-physics-and-structure
+    runs-on: ubuntu-latest
+    # Runs only when GCP Workload Identity Federation and Unity license secrets are configured
+    if: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER != '' && vars.GCS_QUEST_TENNIS_BUCKET != '' }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PROJECT_PATH }}/Library
+          key: Library-Quest3-${{ hashFiles('quest-tennis-trainer/Assets/**') }}
+          restore-keys: |
+            Library-Quest3-
+
+      - name: Run Unity EditMode NUnit Physics Tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: ${{ env.PROJECT_PATH }}
+          unityVersion: ${{ env.UNITY_VERSION }}
+          testMode: EditMode
+          artifactsPath: test-results
+
+      - name: Build Meta Quest 3 Android APK (ARM64 / Vulkan)
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: ${{ env.PROJECT_PATH }}
+          unityVersion: ${{ env.UNITY_VERSION }}
+          targetPlatform: Android
+          buildsPath: build
+          buildName: QuestTennisTrainer
+
+      - name: Authenticate to Google Cloud via Workload Identity Federation
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
+
+      - name: Upload Quest 3 APK & Telemetry Artifacts to Google Cloud Storage
+        uses: google-github-actions/upload-cloud-storage@v2
+        with:
+          path: build/Android
+          destination: ${{ env.GCS_ARTIFACT_BUCKET }}/quest-tennis-trainer/${{ github.sha }}
+          gzip: false
