@@ -35,16 +35,16 @@
 - **Local Repo Path**: `/Users/krishnakasinadhuni/Documents/local-projects/hello-world`
 - **Subproject Path**: `/Users/krishnakasinadhuni/Documents/local-projects/hello-world/quest-tennis-trainer`
 - **Active Git Branch**: `feat/quest-tennis-trainer`
-- **Completed & Committed Files (Session 1)**:
-  - `quest-tennis-trainer/README.md` (Commit `3d13e92`) — Architecture overview and 5-session roadmap.
-  - `quest-tennis-trainer/.gitignore` (Commit `de9e39d`) — Unity 6, C#, and Meta Quest `.apk`/`.aab` ignore rules.
-  - `quest-tennis-trainer/Assets/_Project/Core/TennisPhysicsConfig.cs` (Commit `de9e39d`) — Pure C# struct with 120 Hz timing, ITF ball constants, drag/Magnus coefficients, stringbed restitution, and room-scale reach parameters.
+- **Completed & Committed Files (Sessions 1 & 2)**:
+  - `quest-tennis-trainer/README.md` — Architecture overview and 5-session roadmap.
+  - `quest-tennis-trainer/.gitignore` — Unity 6, C#, and Meta Quest `.apk`/`.aab` ignore rules.
+  - `quest-tennis-trainer/Assets/_Project/Core/TennisPhysicsConfig.cs` — Pure C# struct with 120 Hz timing, ITF ball constants, drag/Magnus coefficients, stringbed restitution, and room-scale reach parameters.
+  - `quest-tennis-trainer/Assets/_Project/Physics/BallAerodynamics.cs` — Pure C# / Unity aerodynamic solver for gravity, air drag, Magnus spin curve, and court/wall bounce restitution.
+  - `quest-tennis-trainer/Assets/_Project/Physics/SweptRacketCollider.cs` — 120 Hz 10-substep Hermite spline collision detector with stringbed sweet-spot vs frame restitution, tangential friction, and topspin/slice/kick spin calculation.
 
 ## 5. Remaining Build Roadmap (Next Sessions)
 - **[x] Session 1 — Repo Foundation & Physics Constants** (Done)
-- **[ ] Session 2 — Core Ball Aerodynamics & Swept Racket Physics**:
-  - Create `quest-tennis-trainer/Assets/_Project/Physics/BallAerodynamics.cs` (pure C# / Unity-compatible solver for gravity, air drag, Magnus spin force, and court/wall bounce).
-  - Create `quest-tennis-trainer/Assets/_Project/Physics/SweptRacketCollider.cs` (120 Hz 10-substep Hermite spline collision detector + oblique stringbed spin calculator).
+- **[x] Session 2 — Core Ball Aerodynamics & Swept Racket Physics** (Done)
 - **[ ] Session 3 — Tennis Wall & Haptics**:
   - Create `quest-tennis-trainer/Assets/_Project/TrainingModes/WallPractice/TennisWallController.cs` (net-line fault detection, target zones, and Smart Return Funnel).
   - Create `quest-tennis-trainer/Assets/_Project/XR_Input/RacketHapticsController.cs` (sweet-spot vs. frame vibration and serve toss tick).
@@ -59,4 +59,4 @@
 
 > We are building `quest-tennis-trainer` inside `/Users/krishnakasinadhuni/Documents/local-projects/hello-world/quest-tennis-trainer` on the `feat/quest-tennis-trainer` branch.
 > First, read `quest-tennis-trainer/README.md`, `quest-tennis-trainer/ANTIGRAVITY_HANDOFF.md`, and `quest-tennis-trainer/Assets/_Project/Core/TennisPhysicsConfig.cs`.
-> To conserve AI Pro credits, only work on **one session at a time (2–3 files max)** and wait for my confirmation before moving to the next session. Let's start **Session 2** now by implementing `BallAerodynamics.cs` and `SweptRacketCollider.cs`.
+> To conserve AI Pro credits, only work on **one session at a time (2–3 files max)** and wait for my confirmation before moving to the next session. Let's start **Session 3** now by implementing `TennisWallController.cs` and `RacketHapticsController.cs`.
