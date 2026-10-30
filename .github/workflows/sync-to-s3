@@ -1,30 +1,23 @@
 name: Run Bash Script on Push
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   run_script:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Run Bash Script
-      run: |
-        # Set the environment variable to pass as an argument
-        ENVIRONMENT=${{ env.ENVIRONMENT }}
-
-        # Specify your Bash script name and location
-        SCRIPT_PATH="./script.sh"
-
-        # Make the script executable
-        chmod +x "$SCRIPT_PATH"
-
-        # Run the Bash script with the environment as an argument
-        "$SCRIPT_PATH" "$ENVIRONMENT"
-      env:
-        ENVIRONMENT: ${{ env.ENVIRONMENT }}
+      - name: Run Bash Script if present
+        env:
+          ENVIRONMENT: ${{ vars.ENVIRONMENT || 'dev' }}
+        run: |
+          if [[ -f "./script.sh" ]]; then
+            chmod +x "./script.sh"
+            "./script.sh" "$ENVIRONMENT"
+          fi

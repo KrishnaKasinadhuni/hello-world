@@ -5,7 +5,7 @@ import { EcrStack } from '../lib/ecr-stack';
 
 const app = new cdk.App();
 const env = {
-  account: process.env.CDK_DEFAULT_ACCOUNT || '908027415245',
+  account: process.env.CDK_DEFAULT_ACCOUNT || '111122223333',
   region: process.env.CDK_DEFAULT_REGION || 'us-east-1',
 };
 

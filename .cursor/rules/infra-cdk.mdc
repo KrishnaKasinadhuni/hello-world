@@ -8,7 +8,7 @@ globs: cdk-patterns/**, reverse-image-search-aws/infrastructure/**, services/aws
 2. **Branch Isolation:** Infrastructure experiments like DynamoDB patterns belong on feature branches (e.g. `feat/cdk-dynamo`).
 3. **IAM & Security:**
    - Refer to `services/aws/iam-setup/` for IAM security procedures.
-   - Deployments use account `908027415245` via the `assumed-admin` profile. Refresh sessions with `refresh-admin` or `./services/aws/iam-setup/scripts/assume-role.sh`.
+   - Deployments use account `<AWS_ACCOUNT_ID>` via the `assumed-admin` profile. Refresh sessions with `refresh-admin` or `./services/aws/iam-setup/scripts/assume-role.sh`.
    - Never commit AWS access keys or secret keys to version control.
 4. **Deployment Workflows:**
    - Rapid dev iterations: `cd cdk-patterns && npm run deploy:dev` (Express mode `cdk deploy --express`, skips full stabilization wait, rollback disabled by default).

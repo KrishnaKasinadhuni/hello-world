@@ -18,4 +18,4 @@ Use this playbook when modifying AWS CDK infrastructure (`cdk-patterns/` or `ser
 2. **IAM & AWS Role Management:**
    - Refer to `services/aws/iam-setup/README.md`.
    - Refresh role session credentials with `refresh-admin` shell command or `services/aws/iam-setup/scripts/assume-role.sh`.
-   - Account ID: `908027415245`. Role: `admin-access-role`.
+   - Account ID: `<AWS_ACCOUNT_ID>`. Role: `admin-access-role`.

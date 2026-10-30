@@ -5,7 +5,7 @@ import { EcrStack } from '../lib/ecr-stack';
 test('ECR Stack creates 4 core repositories with scanning and lifecycle rules', () => {
   const app = new cdk.App();
   const stack = new EcrStack(app, 'TestEcrStack', {
-    env: { account: '908027415245', region: 'us-east-1' },
+    env: { account: '111122223333', region: 'us-east-1' },
   });
   const template = Template.fromStack(stack);
 

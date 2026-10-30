@@ -54,7 +54,7 @@ graph TD
 | `services/python/logAnalyzer/` | Microservice | **Active / Working POC** | Python ML service for log analysis. Dockerized with `docker-compose.yml`. |
 | `services/python/configManager/` | Microservice | **Active / Working POC** | Python configuration manager. Dockerized with `docker-compose.yml`. |
 | `services/gcp/mcpGateway/` | Microservice | **Active Service** | Cloud Run Remote MCP Gateway (FastAPI + Google OAuth 2.0). Provides SSE transport (`/sse`), Web Fetch, and GCS Memory tools. |
-| `services/aws/iam-setup/` | Security & Admin | **Active Tooling** | Shell scripts (`scripts/assume-role.sh`) and instructions to assume IAM role `admin-access-role` on AWS account `908027415245`. |
+| `services/aws/iam-setup/` | Security & Admin | **Active Tooling** | Shell scripts (`scripts/assume-role.sh`) and instructions to assume IAM role `admin-access-role` on AWS account `<AWS_ACCOUNT_ID>`. |
 | `services/curls/` | CLI Scripts | **Reference Tooling** | `helloworld-apigw.sh` fetches API key from AWS Secrets Manager and tests deployed API Gateway endpoint. |
 | `mcp-gateway-instructions/` | Documentation | **Docs-Only** | 6-phase instruction set (01-06) for building an MCP Gateway. Contains no application code. |
 
@@ -73,5 +73,5 @@ graph TD
    - **OpenSearch:** Stubs in `app/search.py` intended for vector k-NN indexing.
 
 3. **AWS IAM Security Flow:**
-   - Script `./services/aws/iam-setup/scripts/assume-role.sh` calls `aws sts assume-role` for `arn:aws:iam::908027415245:role/admin-access-role` using profile `default`.
+   - Script `./services/aws/iam-setup/scripts/assume-role.sh` calls `aws sts assume-role` for `arn:aws:iam::<AWS_ACCOUNT_ID>:role/admin-access-role` using profile `default`.
    - Populates temporary credentials in `~/.aws/credentials` under profile `assumed-admin`.

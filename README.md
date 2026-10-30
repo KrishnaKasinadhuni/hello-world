@@ -141,7 +141,7 @@ docker run -p 8000:8000 --env-file .env ris-backend
 cd cdk-patterns
 npm install
 npx cdk synth       # preview CloudFormation template
-npx cdk deploy      # deploy to AWS (account: 908027415245, region: us-east-1)
+npx cdk deploy      # deploy to AWS (account: <AWS_ACCOUNT_ID>, region: us-east-1)
 npx cdk diff        # diff against deployed stack
 ```
 
@@ -228,9 +228,9 @@ python main.py             # http://localhost:8080/docs
 **What it does:** Documents and scripts for setting up IAM users, groups, and roles for safe AWS access.
 
 **Key file: `scripts/assume-role.sh`**  
-The shell script that assumes `admin-access-role` (ARN: `arn:aws:iam::908027415245:role/admin-access-role`) and refreshes `~/.aws/credentials` for the `assumed-admin` profile. Referenced by the `assume-role` alias in `~/.zshrc`.
+The shell script that assumes `admin-access-role` (ARN: `arn:aws:iam::<AWS_ACCOUNT_ID>:role/admin-access-role`) and refreshes `~/.aws/credentials` for the `assumed-admin` profile. Referenced by the `assume-role` alias in `~/.zshrc`.
 
-**AWS account:** `908027415245`  
+**AWS account:** `<AWS_ACCOUNT_ID>`  
 **IAM user:** `application-admin`  
 **Role:** `admin-access-role` (1-hour session tokens)
 
@@ -242,7 +242,7 @@ The shell script that assumes `admin-access-role` (ARN: `arn:aws:iam::9080274152
 **Status:** ✅ Implemented and published to ECR  
 **What it does:** Complete workflow for managing AWS ECR repositories and publishing production Docker containers for all core microservices.
 
-**Target ECR Repositories (AWS Account `908027415245`, `us-east-1`):**
+**Target ECR Repositories (AWS Account `<AWS_ACCOUNT_ID>`, `us-east-1`):**
 - `hello-world/image-classification`
 - `hello-world/log-analyzer`
 - `hello-world/config-manager`
@@ -312,10 +312,10 @@ cd services/blockchain/client && npm run dev
 
 | Resource | Value |
 |---|---|
-| **AWS Account** | `908027415245` |
+| **AWS Account** | `<AWS_ACCOUNT_ID>` |
 | **Default region** | `us-east-1` |
 | **IAM user** | `application-admin` |
-| **Admin role** | `arn:aws:iam::908027415245:role/admin-access-role` |
+| **Admin role** | `arn:aws:iam::<AWS_ACCOUNT_ID>:role/admin-access-role` |
 | **Active AWS profile** | `assumed-admin` (set via `AWS_PROFILE` in `~/.zshrc`) |
 | **API Gateway (us-east-2)** | `https://9se90ih4xg.execute-api.us-east-2.amazonaws.com/dev/` |
 
