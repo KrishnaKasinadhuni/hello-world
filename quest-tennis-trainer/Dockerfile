@@ -32,7 +32,7 @@ RUN dotnet publish ./QuestTennisTrainer.Tests.csproj \
 # - Zero shell (/bin/sh removed), zero package manager, minimal attack surface
 # - Runs strictly as unprivileged non-root user ($APP_UID = 1654)
 # ==============================================================================
-FROM mcr.microsoft.com/dotnet/runtime:8.0-noble-chiseled AS sandbox
+FROM mcr.microsoft.com/dotnet/runtime:10.0-noble-chiseled AS sandbox
 
 WORKDIR /app
 COPY --from=build /app/publish ./
