@@ -24,7 +24,7 @@ permissions:
 env:
   PROJECT_PATH: quest-tennis-trainer
   UNITY_VERSION: 6000.0.23f1
-  GHCR_IMAGE: ghcr.io/${{ github.repository_owner }}/quest-tennis-sandbox
+  GHCR_IMAGE: ghcr.io/krishnakasinadhuni/quest-tennis-sandbox
   GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
   GCP_REGION: ${{ vars.GCP_REGION || 'us-central1' }}
   GCP_ARTIFACT_REPO: ${{ vars.GCP_ARTIFACT_REPO }}
