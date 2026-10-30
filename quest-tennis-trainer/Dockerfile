@@ -41,3 +41,4 @@ COPY --from=build /app/publish ./
 USER $APP_UID
 
 ENTRYPOINT ["dotnet", "/app/QuestTennisTrainer.Tests.dll", "--noresult"]
+

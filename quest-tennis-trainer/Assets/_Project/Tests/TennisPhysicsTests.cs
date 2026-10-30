@@ -212,6 +212,35 @@ namespace QuestTennisTrainer.Tests
             Assert.IsTrue(telemetry.HitTargetCone);
             Assert.AreEqual(ServeSpinClassification.Kick, telemetry.ServeType);
         }
+
+        [Test]
+        public void TennisCourtSceneBuilder_BuildsWiredTrainingRig_AndExecutesWallRally()
+        {
+            TennisSimulationBootstrap rig = TennisCourtSceneBuilder.BuildWiredTrainingRig(
+                WallDistancePreset.BaselineGroundstrokes12m);
+
+            Assert.IsNotNull(rig.ActiveBall);
+            Assert.IsNotNull(rig.TennisWall);
+            Assert.AreEqual(TennisPhysicsConfig.FixedDeltaTime, Time.fixedDeltaTime, 0.00001f);
+
+            // Switch to Tennis Wall mode and simulate a shot crossing the 12m backboard inside the Center_Control target zone
+            rig.SwitchTrainingMode(TennisTrainingMode.TennisWall);
+            Assert.AreEqual(TennisTrainingMode.TennisWall, rig.ActiveMode);
+
+            BallAerodynamics ball = rig.ActiveBall;
+            ball.LaunchWithTennisParameters(95f, new Vector3(0f, 0.08f, 1f), 2000f, 0f);
+
+            Vector3 preImpactPos = new Vector3(0.1f, 1.50f, 11.80f);
+            Vector3 postImpactPos = new Vector3(0.1f, 1.52f, 12.05f);
+
+            bool hitWall = rig.TennisWall.CheckAndResolveWallCollision(preImpactPos, postImpactPos, ball);
+
+            Assert.IsTrue(hitWall, "Ball crossing the 12m backboard plane must register a valid wall hit.");
+            Assert.AreEqual(1, rig.TennisWall.CurrentRallyStreak);
+            Assert.AreEqual(1, rig.TennisWall.TargetZoneHits);
+            Assert.AreEqual(100, rig.TennisWall.TotalScore);
+            Assert.Less(ball.Velocity.z, 0f, "Ball must rebound back toward the player (-Z).");
+        }
     }
 }
 
