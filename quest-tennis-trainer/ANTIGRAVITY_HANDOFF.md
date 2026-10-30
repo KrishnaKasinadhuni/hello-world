@@ -51,9 +51,11 @@
   - `quest-tennis-trainer/Dockerfile` & `quest-tennis-trainer/.dockerignore` — Multi-stage build into Microsoft's hardened distroless `mcr.microsoft.com/dotnet/runtime:8.0-noble-chiseled` image (no shell, no package manager, non-root `$APP_UID`).
   - `quest-tennis-trainer/Assets/_Project/Core/TennisSimulationBootstrap.cs` — 120 Hz physics lock and training mode orchestrator (`BallMachine`, `TennisWall`, `ServePractice`).
   - `quest-tennis-trainer/Assets/_Project/Core/TennisCourtSceneBuilder.cs` — Zero-click procedural ITF court layout generator and full training rig builder.
+  - `quest-tennis-trainer/Packages/manifest.json` & `ProjectSettings/ProjectVersion.txt` — Unity 6 LTS (`6000.0.23f1`) URP, OpenXR, and Meta OpenXR configuration.
+  - `quest-tennis-trainer/scripts/sandbox.sh` — One-command CLI for running the hardened distroless Docker test sandbox and Quest 3 120 Hz ADB sideloading.
   - `.github/workflows/quest-tennis-ci.yml` — Path-filtered GitHub Actions CI/CD workflow running `dotnet test` + GCP Workload Identity Federation for Quest 3 APK storage.
 
-## 5. Remaining Build Roadmap (Next Sessions)
+## 5. Remaining Build Roadmap (All 8 Sessions Complete)
 - **[x] Session 1 — Repo Foundation & Physics Constants** (Done)
 - **[x] Session 2 — Core Ball Aerodynamics & Swept Racket Physics** (Done)
 - **[x] Session 3 — Tennis Wall & Haptics** (Done)
@@ -61,7 +63,7 @@
 - **[x] Session 5 — NUnit Physics Tests & GitHub Actions + GCP CI/CD** (Done)
 - **[x] Session 6 — Hardened Distroless Docker Sandbox & `.NET 8` Test Runner** (Done)
 - **[x] Session 7 — Zero-Click 3D Scene Bootstrapper (`TennisSimulationBootstrap.cs` & `TennisCourtSceneBuilder.cs`)** (Done)
-- **[ ] Session 8 — Unity 6 Package Manifest (`Packages/manifest.json`) & Sandbox CLI Script (`scripts/sandbox.sh`)**
+- **[x] Session 8 — Unity 6 Package Manifest (`Packages/manifest.json`) & Sandbox CLI Script (`scripts/sandbox.sh`)** (Done)
 
 ## 6. Prompt to Paste Directly into Antigravity
 

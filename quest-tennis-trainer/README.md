@@ -37,11 +37,17 @@ To keep token and AI Pro credit usage low, development is split into 5 self-cont
 - **[x] Session 5 — GitHub Actions CI/CD & GCP Artifact Pipeline**: Add `TennisPhysicsTests.cs` NUnit suite and `.github/workflows/quest-tennis-ci.yml` with Workload Identity Federation for Google Cloud Storage / Artifact Registry.
 - **[x] Session 6 — Hardened Distroless Docker Sandbox & `.NET 8` NUnit Runner**: Add `Dockerfile` (`mcr.microsoft.com/dotnet/runtime:8.0-noble-chiseled`), `.dockerignore`, `QuestTennisTrainer.Tests.csproj`, and `UnityEngineStubs.cs` (`#if !UNITY_5_3_OR_NEWER`).
 - **[x] Session 7 — Zero-Click 3D Scene Bootstrapper**: Add `TennisSimulationBootstrap.cs` (120 Hz lock & mode switcher) and `TennisCourtSceneBuilder.cs` (procedural regulation court & rig wiring).
-- **[ ] Session 8 — Unity 6 Package Manifest & Sandbox CLI Script**: Add `Packages/manifest.json` and `scripts/sandbox.sh`.
+- **[x] Session 8 — Unity 6 Package Manifest & Sandbox CLI Script**: Add `Packages/manifest.json`, `ProjectSettings/ProjectVersion.txt`, and `scripts/sandbox.sh`.
 
-## Running the Hardened Physics Sandbox Locally
+## Running the Hardened Physics Sandbox & Quest 3 Sideloader
 
 ```bash
-docker build -t quest-tennis-sandbox:latest quest-tennis-trainer
-docker run --rm --read-only --cap-drop=ALL --security-opt=no-new-privileges quest-tennis-sandbox:latest
+# 1. Run 120Hz NUnit physics & rally suite inside hardened distroless container
+./quest-tennis-trainer/scripts/sandbox.sh test
+
+# 2. Check Quest 3 ADB Developer Mode connection
+./quest-tennis-trainer/scripts/sandbox.sh quest-status
+
+# 3. Sideload built APK to Quest 3 and lock display to 120 Hz
+./quest-tennis-trainer/scripts/sandbox.sh sideload
 ```
