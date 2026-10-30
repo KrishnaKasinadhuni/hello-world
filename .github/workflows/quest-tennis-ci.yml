@@ -1,0 +1,212 @@
+name: Quest 3 Tennis Trainer CI & GCP Artifact Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/quest-tennis-trainer*"
+    paths:
+      - "quest-tennis-trainer/**"
+      - ".github/workflows/quest-tennis-ci.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "quest-tennis-trainer/**"
+      - ".github/workflows/quest-tennis-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write # For publishing hardened sandbox image to GitHub Container Registry (GHCR)
+  id-token: write # For keyless Google Cloud Workload Identity Federation (OIDC)
+
+env:
+  PROJECT_PATH: quest-tennis-trainer
+  UNITY_VERSION: 6000.0.23f1
+  GHCR_IMAGE: ghcr.io/krishnakasinadhuni/quest-tennis-sandbox
+  GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  GCP_REGION: ${{ vars.GCP_REGION || 'us-central1' }}
+  GCP_ARTIFACT_REPO: ${{ vars.GCP_ARTIFACT_REPO }}
+  GCS_ARTIFACT_BUCKET: ${{ vars.GCS_QUEST_TENNIS_BUCKET }}
+
+jobs:
+  verify-physics-and-structure:
+    name: Validate C# Physics, Hardened Container & CLI Suite
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Verify Core C# Modules & NUnit Test Suite Exist
+        run: |
+          set -euo pipefail
+          REQUIRED_FILES=(
+            "$PROJECT_PATH/Assets/_Project/Core/TennisPhysicsConfig.cs"
+            "$PROJECT_PATH/Assets/_Project/Core/TennisSimulationBootstrap.cs"
+            "$PROJECT_PATH/Assets/_Project/Core/TennisCourtSceneBuilder.cs"
+            "$PROJECT_PATH/Assets/_Project/Physics/BallAerodynamics.cs"
+            "$PROJECT_PATH/Assets/_Project/Physics/SweptRacketCollider.cs"
+            "$PROJECT_PATH/Assets/_Project/TrainingModes/WallPractice/TennisWallController.cs"
+            "$PROJECT_PATH/Assets/_Project/XR_Input/RacketHapticsController.cs"
+            "$PROJECT_PATH/Assets/_Project/TrainingModes/BallMachine/BallMachineController.cs"
+            "$PROJECT_PATH/Assets/_Project/TrainingModes/ServeTrainer/ServeTossController.cs"
+            "$PROJECT_PATH/Assets/_Project/Tests/TennisPhysicsTests.cs"
+          )
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [[ ! -f "$file" ]]; then
+              echo "ERROR: Missing required module: $file"
+              exit 1
+            fi
+            echo "Verified: $file"
+          done
+
+      - name: Verify 120Hz Sub-Step & Room-Scale Constants
+        run: |
+          grep -q "TargetFrameRateHz = 120f" "$PROJECT_PATH/Assets/_Project/Core/TennisPhysicsConfig.cs"
+          grep -q "CollisionSubSteps = 10" "$PROJECT_PATH/Assets/_Project/Core/TennisPhysicsConfig.cs"
+          grep -q "MaxLateralReachMeters = 1.20f" "$PROJECT_PATH/Assets/_Project/Core/TennisPhysicsConfig.cs"
+          grep -q "WallSmartFunnelBias = 0.15f" "$PROJECT_PATH/Assets/_Project/Core/TennisPhysicsConfig.cs"
+          echo "All 120Hz Quest 3 physics invariants verified."
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Compile C# Codebase & Run NUnit Physics Test Suite
+        run: |
+          dotnet test "$PROJECT_PATH/QuestTennisTrainer.Tests.csproj" \
+            --configuration Release \
+            --logger "trx;LogFileName=physics-test-results.trx" \
+            --results-directory "$PROJECT_PATH/TestResults"
+
+      - name: Upload NUnit Physics Test Results Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quest-tennis-nunit-results-${{ github.sha }}
+          path: ${{ env.PROJECT_PATH }}/TestResults/
+          retention-days: 14
+
+      - name: Run Hardened Distroless Docker Sandbox & ADB CLI Test Suite
+        run: |
+          ./$PROJECT_PATH/scripts/test-sandbox-cli.sh
+
+  publish-sandbox-container:
+    name: Publish Hardened Sandbox Image (GHCR & GCP Artifact Registry)
+    needs: verify-physics-and-structure
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Hardened Chiseled Sandbox Image to GHCR
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.PROJECT_PATH }}
+          file: ${{ env.PROJECT_PATH }}/Dockerfile
+          push: true
+          tags: |
+            ${{ env.GHCR_IMAGE }}:latest
+            ${{ env.GHCR_IMAGE }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Authenticate to Google Cloud via Workload Identity Federation
+        if: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER != '' && vars.GCP_ARTIFACT_REPO != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
+
+      - name: Configure Docker for GCP Artifact Registry
+        if: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER != '' && vars.GCP_ARTIFACT_REPO != '' }}
+        run: |
+          gcloud auth configure-docker "${{ env.GCP_REGION }}-docker.pkg.dev" --quiet
+
+      - name: Push Hardened Sandbox Image to GCP Artifact Registry
+        if: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER != '' && vars.GCP_ARTIFACT_REPO != '' }}
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.PROJECT_PATH }}
+          file: ${{ env.PROJECT_PATH }}/Dockerfile
+          push: true
+          tags: |
+            ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REPO }}/quest-tennis-sandbox:latest
+            ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REPO }}/quest-tennis-sandbox:${{ github.sha }}
+          cache-from: type=gha
+
+  build-and-upload-gcp:
+    name: Build Quest 3 APK & Upload to GCS / GitHub Artifacts
+    needs: verify-physics-and-structure
+    runs-on: ubuntu-latest
+    # Runs when Unity license secret is configured
+    if: ${{ vars.ENABLE_UNITY_APK_BUILD == 'true' }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PROJECT_PATH }}/Library
+          key: Library-Quest3-${{ hashFiles('quest-tennis-trainer/Assets/**') }}
+          restore-keys: |
+            Library-Quest3-
+
+      - name: Run Unity EditMode NUnit Physics Tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: ${{ env.PROJECT_PATH }}
+          unityVersion: ${{ env.UNITY_VERSION }}
+          testMode: EditMode
+          artifactsPath: test-results
+
+      - name: Build Meta Quest 3 Android APK (ARM64 / Vulkan)
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: ${{ env.PROJECT_PATH }}
+          unityVersion: ${{ env.UNITY_VERSION }}
+          targetPlatform: Android
+          buildsPath: build
+          buildName: QuestTennisTrainer
+
+      - name: Upload Quest 3 APK to GitHub Actions Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuestTennisTrainer-Android-APK-${{ github.sha }}
+          path: build/Android/
+          retention-days: 14
+
+      - name: Authenticate to Google Cloud via Workload Identity Federation
+        if: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER != '' && vars.GCS_QUEST_TENNIS_BUCKET != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
+
+      - name: Upload Quest 3 APK to Google Cloud Storage
+        if: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER != '' && vars.GCS_QUEST_TENNIS_BUCKET != '' }}
+        uses: google-github-actions/upload-cloud-storage@v2
+        with:
+          path: build/Android
+          destination: ${{ env.GCS_ARTIFACT_BUCKET }}/quest-tennis-trainer/${{ github.sha }}
+          gzip: false

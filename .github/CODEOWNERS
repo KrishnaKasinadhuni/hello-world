@@ -1,0 +1,10 @@
+# Default owner for everything in the repository
+* @KrishnaKasinadhuni
+
+# Critical CI/CD, Security, and Cloud Infrastructure paths
+/.github/ @KrishnaKasinadhuni
+/cdk-patterns/ @KrishnaKasinadhuni
+/services/aws/ @KrishnaKasinadhuni
+/services/gcp/ @KrishnaKasinadhuni
+/quest-tennis-trainer/ @KrishnaKasinadhuni
+/SECURITY.md @KrishnaKasinadhuni

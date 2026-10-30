@@ -5,8 +5,8 @@ This document provides canonical repository-wide instructions for AI coding assi
 ---
 
 ## 📅 Last Reviewed
-- **Date:** 2026-10-10
-- **Areas Inspected:** `services/aws/scripts/ecr-pipeline.sh`, `cdk-patterns/` (`lib/ecr-stack.ts`, `test/ecr.test.ts`), `services/blockchain/` (`node/`, `client/`), `frontend/`, `reverse-image-search-aws/` (`backend/`, `frontend/`, `infrastructure/`), `services/` (`aws/`, `nodejs/`, `python/`, `gcp/mcpGateway/`, `curls/`), `mcp-gateway-instructions/`.
+- **Date:** 2026-10-29
+- **Areas Inspected:** `quest-tennis-trainer/` (`Assets/_Project/**`, `.github/workflows/quest-tennis-ci.yml`), `services/aws/scripts/ecr-pipeline.sh`, `cdk-patterns/` (`lib/ecr-stack.ts`, `test/ecr.test.ts`), `services/blockchain/` (`node/`, `client/`), `frontend/`, `reverse-image-search-aws/` (`backend/`, `frontend/`, `infrastructure/`), `services/` (`aws/`, `nodejs/`, `python/`, `gcp/mcpGateway/`, `curls/`), `mcp-gateway-instructions/`.
 
 ---
 
@@ -75,7 +75,7 @@ hello-world/
 2. **Explicit Uncertainty:** Mark scaffolds and partial implementations clearly. Do not write production deployment code expecting `reverse-image-search-aws/infrastructure/` or `reverse-image-search-aws/frontend/` to already contain implemented code.
 3. **No Environment/Secret Hardcoding:** Never hardcode AWS keys, Cohere API keys (`COHERE_API_KEY`), or Secret Strings in code. Use environment variables or `.env` files matching `.env.example`.
 4. **Preserve API Contracts:** The root `frontend/` relies on API contracts exposed by `services/nodejs/imageClassification/` (ports 3001 -> 3000 proxy via `setupProxy.js`). Keep endpoint responses compatible (`/api/upload`, `/api/classify`, `/api/similar`).
-5. **AWS Credential Isolation:** Use profile `assumed-admin` for CLI operations. Do not hardcode account `908027415245` credentials.
+5. **AWS Credential Isolation:** Use profile `assumed-admin` for CLI operations. Do not hardcode account `<AWS_ACCOUNT_ID>` credentials.
 
 ---
 
