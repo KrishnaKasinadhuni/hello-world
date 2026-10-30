@@ -63,6 +63,15 @@ jobs:
           grep -q "WallSmartFunnelBias = 0.15f" "$PROJECT_PATH/Assets/_Project/Core/TennisPhysicsConfig.cs"
           echo "All 120Hz Quest 3 physics invariants verified."
 
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Compile C# Codebase & Run NUnit Physics Test Suite
+        run: |
+          dotnet test "$PROJECT_PATH/QuestTennisTrainer.Tests.csproj" --configuration Release --verbosity normal
+
   build-and-upload-gcp:
     name: Build Quest 3 APK & Upload to Google Cloud Storage
     needs: verify-physics-and-structure
@@ -116,3 +125,4 @@ jobs:
           path: build/Android
           destination: ${{ env.GCS_ARTIFACT_BUCKET }}/quest-tennis-trainer/${{ github.sha }}
           gzip: false
+

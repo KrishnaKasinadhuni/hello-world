@@ -42,15 +42,15 @@ namespace QuestTennisTrainer.Tests
             // Ball flying forward (+Z) at 25 m/s (90 km/h)
             Vector3 forwardVel = new Vector3(0f, 0f, 25f);
 
-            // Topspin: top of ball rotates toward +Z -> right-hand thumb points Left (-X)
+            // Topspin in Unity (+X right, +Y up, +Z forward): omega = (+w, 0, 0) so omega x r_top = (0, 0, +v_top)
             float rpm2500RadSec = 2500f * (2f * Mathf.PI / 60f);
-            Vector3 topspinOmega = new Vector3(-rpm2500RadSec, 0f, 0f);
+            Vector3 topspinOmega = new Vector3(rpm2500RadSec, 0f, 0f);
             Vector3 magnusTopspin = BallAerodynamics.ComputeMagnusForce(forwardVel, topspinOmega, 0.22f);
 
             Assert.Less(magnusTopspin.y, -0.05f, "Topspin must generate a downward (-Y) Magnus force that dips the ball into the court.");
 
-            // Slice/Backspin: top rotates toward -Z -> right-hand thumb points Right (+X)
-            Vector3 backspinOmega = new Vector3(rpm2500RadSec, 0f, 0f);
+            // Slice/Backspin: omega = (-w, 0, 0)
+            Vector3 backspinOmega = new Vector3(-rpm2500RadSec, 0f, 0f);
             Vector3 magnusBackspin = BallAerodynamics.ComputeMagnusForce(forwardVel, backspinOmega, 0.22f);
 
             Assert.Greater(magnusBackspin.y, 0.05f, "Backspin/slice must generate an upward (+Y) Magnus lift force.");
@@ -62,7 +62,7 @@ namespace QuestTennisTrainer.Tests
             TennisPhysicsConfig cfg = TennisPhysicsConfig.CreateDefault();
             Vector3 incomingVel = new Vector3(0f, 1.0f, 20f);
             float topspinRadSec = 2400f * (2f * Mathf.PI / 60f);
-            Vector3 angVel = new Vector3(-topspinRadSec, 0f, 0f);
+            Vector3 angVel = new Vector3(topspinRadSec, 0f, 0f);
 
             // Wall normal points back toward player (-Z)
             BallAerodynamics.ResolveSurfaceBounce(
@@ -214,3 +214,4 @@ namespace QuestTennisTrainer.Tests
         }
     }
 }
+

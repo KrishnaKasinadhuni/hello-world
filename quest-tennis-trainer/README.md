@@ -35,3 +35,11 @@ To keep token and AI Pro credit usage low, development is split into 5 self-cont
 - **[x] Session 3 — Tennis Wall & Haptics**: Implement `TennisWallController.cs` (with Smart Return Funnel for 1–2 step movement) and `RacketHapticsController.cs` (sweet-spot vs. frame vibration).
 - **[x] Session 4 — Programmable Ball Machine & Serve Practice**: Implement `BallMachineController.cs` (ballistic trajectory solver) and `ServeTossController.cs` (toss release + serve box fault/radar tracker).
 - **[x] Session 5 — GitHub Actions CI/CD & GCP Artifact Pipeline**: Add `TennisPhysicsTests.cs` NUnit suite and `.github/workflows/quest-tennis-ci.yml` with Workload Identity Federation for Google Cloud Storage / Artifact Registry.
+- **[x] Session 6 — Hardened Distroless Docker Sandbox & `.NET 8` NUnit Runner**: Add `Dockerfile` (`mcr.microsoft.com/dotnet/runtime:8.0-noble-chiseled`), `.dockerignore`, `QuestTennisTrainer.Tests.csproj`, and `UnityEngineStubs.cs` (`#if !UNITY_5_3_OR_NEWER`).
+
+## Running the Hardened Physics Sandbox Locally
+
+```bash
+docker build -t quest-tennis-sandbox:latest quest-tennis-trainer
+docker run --rm --read-only --cap-drop=ALL --security-opt=no-new-privileges quest-tennis-sandbox:latest
+```

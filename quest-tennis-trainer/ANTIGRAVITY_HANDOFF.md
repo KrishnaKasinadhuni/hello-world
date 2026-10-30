@@ -46,14 +46,20 @@
   - `quest-tennis-trainer/Assets/_Project/TrainingModes/BallMachine/BallMachineController.cs` — Programmable ball machine constrained to Quest 3 Guardian & $\pm 1.2\text{m}$ room-scale reach, with drill presets, net clearance, and landing depth heatmap.
   - `quest-tennis-trainer/Assets/_Project/TrainingModes/ServeTrainer/ServeTossController.cs` — Two-handed serve trainer with velocity-smoothed toss release, apex predictor, 200 ms behind-the-back IMU occlusion compensation, and Deuce/Ad Wide/Body/T service box radar telemetry.
   - `quest-tennis-trainer/Assets/_Project/Tests/TennisPhysicsTests.cs` — NUnit test suite covering 120 Hz invariants, Magnus dip/lift, wall rebound kick, Hermite spline accuracy, Smart Return Funnel, parametric haptics, ball machine clamping, and serve occlusion/service-box telemetry.
-  - `.github/workflows/quest-tennis-ci.yml` — Path-filtered GitHub Actions CI/CD workflow with GCP Workload Identity Federation for Quest 3 APK storage.
+  - `quest-tennis-trainer/Assets/_Project/Tests/UnityEngineStubs.cs` — Conditional `#if !UNITY_5_3_OR_NEWER` math/XR shim and `NUnitLite` runner entrypoint for headless `.NET 8` & Docker testing.
+  - `quest-tennis-trainer/QuestTennisTrainer.Tests.csproj` — Deterministic `.NET 8` project manifest compiling all C# modules and NUnit tests.
+  - `quest-tennis-trainer/Dockerfile` & `quest-tennis-trainer/.dockerignore` — Multi-stage build into Microsoft's hardened distroless `mcr.microsoft.com/dotnet/runtime:8.0-noble-chiseled` image (no shell, no package manager, non-root `$APP_UID`).
+  - `.github/workflows/quest-tennis-ci.yml` — Path-filtered GitHub Actions CI/CD workflow running `dotnet test` + GCP Workload Identity Federation for Quest 3 APK storage.
 
-## 5. Remaining Build Roadmap (All Sessions Complete)
+## 5. Remaining Build Roadmap (Next Sessions)
 - **[x] Session 1 — Repo Foundation & Physics Constants** (Done)
 - **[x] Session 2 — Core Ball Aerodynamics & Swept Racket Physics** (Done)
 - **[x] Session 3 — Tennis Wall & Haptics** (Done)
 - **[x] Session 4 — Programmable Ball Machine & Serve Practice** (Done)
 - **[x] Session 5 — NUnit Physics Tests & GitHub Actions + GCP CI/CD** (Done)
+- **[x] Session 6 — Hardened Distroless Docker Sandbox & `.NET 8` Test Runner** (Done)
+- **[ ] Session 7 — Zero-Click 3D Scene Bootstrapper (`TennisSimulationBootstrap.cs` & `TennisCourtSceneBuilder.cs`)**
+- **[ ] Session 8 — Unity 6 Package Manifest (`Packages/manifest.json`) & Sandbox CLI Script (`scripts/sandbox.sh`)**
 
 ## 6. Prompt to Paste Directly into Antigravity
 
