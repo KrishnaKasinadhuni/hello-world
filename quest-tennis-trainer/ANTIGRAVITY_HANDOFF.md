@@ -55,7 +55,7 @@
   - `quest-tennis-trainer/scripts/sandbox.sh` — One-command CLI for running the hardened distroless Docker test sandbox and Quest 3 120 Hz ADB sideloading.
   - `.github/workflows/quest-tennis-ci.yml` — Path-filtered GitHub Actions CI/CD workflow running `dotnet test` + GCP Workload Identity Federation for Quest 3 APK storage.
 
-## 5. Remaining Build Roadmap (All 8 Sessions Complete)
+## 5. Phase 1 Build Roadmap (Sessions 1–8 — All Complete & Merged to `main` in PR #21)
 - **[x] Session 1 — Repo Foundation & Physics Constants** (Done)
 - **[x] Session 2 — Core Ball Aerodynamics & Swept Racket Physics** (Done)
 - **[x] Session 3 — Tennis Wall & Haptics** (Done)
@@ -65,8 +65,19 @@
 - **[x] Session 7 — Zero-Click 3D Scene Bootstrapper (`TennisSimulationBootstrap.cs` & `TennisCourtSceneBuilder.cs`)** (Done)
 - **[x] Session 8 — Unity 6 Package Manifest (`Packages/manifest.json`) & Sandbox CLI Script (`scripts/sandbox.sh`)** (Done)
 
-## 6. Prompt to Paste Directly into Antigravity
+## 6. Phase 2 Roadmap (Sessions 9–12 — Ready for Tomorrow)
+- **[ ] Session 9 — Spatial Training HUD, Serve Radar & 3D Ball Trail**:
+  - `Assets/_Project/UI/TrainingHudController.cs` (courtside radar board & wrist HUD for km/h, RPM, net clearance cm, and rally streak).
+  - `Assets/_Project/UI/TrajectoryArcRenderer.cs` (3D flight ribbon, toss apex ring, and court bounce marker).
+- **[ ] Session 10 — Quest 3 Mixed Reality (Passthrough) & Room-Scale Safety Ring**:
+  - `Assets/_Project/XR_Input/RoomScaleGuardianVisualizer.cs` (renders the $\pm 1.2\text{m}$ home footwork zone in MR passthrough around the player's feet while projecting the virtual court ahead).
+- **[ ] Session 11 — Biomechanical Swing Coach & Telemetry Exporter**:
+  - `Assets/_Project/Core/SwingCoachAnalyzer.cs` (evaluates low-to-high swing path angle, stringbed face angle at contact, sweet-spot hit rate %, and exports session telemetry).
+- **[ ] Session 12 — Unity 6 Automated Quest 3 APK Builder**:
+  - `Assets/_Project/Core/Editor/QuestAndroidBuildScript.cs` (one-click Unity 6 ARM64 + Vulkan + Dynamic FFR APK builder outputting directly to `build/Android/QuestTennisTrainer.apk`).
 
-> We are building `quest-tennis-trainer` inside `/Users/krishnakasinadhuni/projects/hello-world/quest-tennis-trainer` on the `feat/quest-tennis-trainer` branch.
-> First, read `quest-tennis-trainer/README.md`, `quest-tennis-trainer/ANTIGRAVITY_HANDOFF.md`, and `quest-tennis-trainer/Assets/_Project/Core/TennisPhysicsConfig.cs`.
-> To conserve AI Pro credits, only work on **one session at a time (2–3 files max)** and wait for my confirmation before moving to the next session. Let's start **Session 5** now by implementing the NUnit physics tests under `quest-tennis-trainer/Assets/_Project/Tests/` and `.github/workflows/quest-tennis-ci.yml`.
+## 7. Prompt to Paste Directly into Antigravity Tomorrow
+
+> We are continuing Phase 2 of `quest-tennis-trainer` inside `/Users/krishnakasinadhuni/projects/hello-world/quest-tennis-trainer`.
+> First, read `quest-tennis-trainer/ANTIGRAVITY_HANDOFF.md`.
+> Following our 2–3 files per session pacing rule, let's start **Session 9** (`TrainingHudController.cs` & `TrajectoryArcRenderer.cs`) and verify with `./quest-tennis-trainer/scripts/sandbox.sh test`.
