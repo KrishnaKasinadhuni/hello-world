@@ -72,6 +72,10 @@ jobs:
         run: |
           dotnet test "$PROJECT_PATH/QuestTennisTrainer.Tests.csproj" --configuration Release --verbosity normal
 
+      - name: Run Automated CLI Tests for sandbox.sh
+        run: |
+          ./$PROJECT_PATH/scripts/test-sandbox-cli.sh
+
   build-and-upload-gcp:
     name: Build Quest 3 APK & Upload to Google Cloud Storage
     needs: verify-physics-and-structure
