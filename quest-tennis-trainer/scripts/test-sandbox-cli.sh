@@ -77,3 +77,4 @@ assert_pass "7. 'test' subcommand builds and passes hardened distroless NUnit su
 
 echo ""
 echo "==> All ${PASS_COUNT}/7 sandbox.sh CLI tests passed!"
+

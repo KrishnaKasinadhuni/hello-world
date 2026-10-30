@@ -16,6 +16,7 @@
 ExportedObj/
 .consulo/
 *.csproj
+!QuestTennisTrainer.Tests.csproj
 *.unityproj
 *.sln
 *.suo
