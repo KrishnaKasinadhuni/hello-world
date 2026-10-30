@@ -6,7 +6,7 @@
 #   no package manager, non-root UID 1654 $APP_UID) executing NUnitLite runner
 # ==============================================================================
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
     DOTNET_NOLOGO=1 \
