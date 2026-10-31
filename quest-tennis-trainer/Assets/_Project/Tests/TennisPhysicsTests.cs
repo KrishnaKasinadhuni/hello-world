@@ -2,6 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.XR;
 using QuestTennisTrainer.Core;
+using QuestTennisTrainer.Core.Editor;
 using QuestTennisTrainer.Physics;
 using QuestTennisTrainer.TrainingModes.WallPractice;
 using QuestTennisTrainer.TrainingModes.BallMachine;
@@ -354,6 +355,20 @@ namespace QuestTennisTrainer.Tests
             string compactToonTable = coach.ExportSessionToCompactTable();
             StringAssert.Contains("strokes[shot_idx,speed_kmh,spin_rpm,swing_deg,face_deg,sweet_pct,frame_hit]:", compactToonTable);
             StringAssert.Contains("1,118,2450,20.0,", compactToonTable);
+        }
+
+        [Test]
+        public void QuestAndroidBuildScript_ManifestMatchesQuest3HardwareAndSandboxCliPath()
+        {
+            Quest3BuildManifest manifest = QuestAndroidBuildScript.GetQuest3BuildManifest();
+
+            bool isValid = QuestAndroidBuildScript.ValidateBuildManifest(manifest, out string error);
+            Assert.IsTrue(isValid, error);
+            Assert.AreEqual("ARM64", manifest.TargetArchitecture);
+            Assert.AreEqual("IL2CPP", manifest.ScriptingBackend);
+            Assert.AreEqual("Vulkan", manifest.GraphicsApi);
+            Assert.AreEqual(120, manifest.TargetRefreshRateHz);
+            Assert.AreEqual("build/Android/QuestTennisTrainer.apk", manifest.OutputApkRelativePath);
         }
     }
 }

@@ -73,7 +73,7 @@
   - `Assets/_Project/XR_Input/RoomScaleGuardianVisualizer.cs` (renders the $\pm 1.2\text{m}$ home footwork zone in MR passthrough around the player's feet while projecting the virtual court ahead).
 - **[x] Session 11 — Biomechanical Swing Coach & Telemetry Exporter** (Done):
   - `Assets/_Project/Core/SwingCoachAnalyzer.cs` (evaluates low-to-high swing path angle, stringbed face angle at contact, sweet-spot hit rate %, and exports session telemetry).
-- **[ ] Session 12 — Unity 6 Automated Quest 3 APK Builder**:
+- **[x] Session 12 — Unity 6 Automated Quest 3 APK Builder** (Done):
   - `Assets/_Project/Core/Editor/QuestAndroidBuildScript.cs` (one-click Unity 6 ARM64 + Vulkan + Dynamic FFR APK builder outputting directly to `build/Android/QuestTennisTrainer.apk`).
 
 ## 7. Prompt to Paste Directly into Antigravity Tomorrow
