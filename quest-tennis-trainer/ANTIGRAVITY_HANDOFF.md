@@ -34,9 +34,9 @@
 ## 4. Current Repository State
 - **Local Repo Path**: `/Users/krishnakasinadhuni/projects/hello-world`
 - **Subproject Path**: `/Users/krishnakasinadhuni/projects/hello-world/quest-tennis-trainer`
-- **Active Git Branch**: `feat/quest-tennis-trainer`
-- **Completed & Committed Files (All 5 Sessions Complete)**:
-  - `quest-tennis-trainer/README.md` — Architecture overview and 5-session roadmap.
+- **Active Git Branch**: `main` (Phase 1 & Phase 2 Complete)
+- **Completed & Committed Files (All 12 Sessions Complete)**:
+  - `quest-tennis-trainer/README.md` — Architecture overview and 12-session roadmap.
   - `quest-tennis-trainer/.gitignore` — Unity 6, C#, and Meta Quest `.apk`/`.aab` ignore rules.
   - `quest-tennis-trainer/Assets/_Project/Core/TennisPhysicsConfig.cs` — Pure C# struct with 120 Hz timing, ITF ball constants, drag/Magnus coefficients, stringbed restitution, and room-scale reach parameters.
   - `quest-tennis-trainer/Assets/_Project/Physics/BallAerodynamics.cs` — Pure C# / Unity aerodynamic solver for gravity, air drag, Magnus spin curve, and court/wall bounce restitution.
@@ -45,15 +45,20 @@
   - `quest-tennis-trainer/Assets/_Project/XR_Input/RacketHapticsController.cs` — Parametric OpenXR/Quest 3 haptics controller (200 Hz sweet-spot pulse, 75 Hz frame mishit vibration, and 100 Hz serve toss micro-tick).
   - `quest-tennis-trainer/Assets/_Project/TrainingModes/BallMachine/BallMachineController.cs` — Programmable ball machine constrained to Quest 3 Guardian & $\pm 1.2\text{m}$ room-scale reach, with drill presets, net clearance, and landing depth heatmap.
   - `quest-tennis-trainer/Assets/_Project/TrainingModes/ServeTrainer/ServeTossController.cs` — Two-handed serve trainer with velocity-smoothed toss release, apex predictor, 200 ms behind-the-back IMU occlusion compensation, and Deuce/Ad Wide/Body/T service box radar telemetry.
-  - `quest-tennis-trainer/Assets/_Project/Tests/TennisPhysicsTests.cs` — NUnit test suite covering 120 Hz invariants, Magnus dip/lift, wall rebound kick, Hermite spline accuracy, Smart Return Funnel, parametric haptics, ball machine clamping, and serve occlusion/service-box telemetry.
+  - `quest-tennis-trainer/Assets/_Project/UI/TrainingHudController.cs` — Spatial courtside Serve & Shot Speed Radar board + non-dominant wrist HUD.
+  - `quest-tennis-trainer/Assets/_Project/UI/TrajectoryArcRenderer.cs` — 3D ball flight ribbon, serve toss apex target ring, and color-coded bounce markers.
+  - `quest-tennis-trainer/Assets/_Project/XR_Input/RoomScaleGuardianVisualizer.cs` — Quest 3 Mixed Reality passthrough controller and $\pm 1.2\text{m}$ room-scale safety ring (`SafeCenter`, `CautionNearEdge`, `BoundaryBreached`) with auto-pause of ball machine.
+  - `quest-tennis-trainer/Assets/_Project/Core/SwingCoachAnalyzer.cs` — Biomechanical swing analyzer (swing path angle, racket face tilt angle, actionable coaching cues, and TOON tabular stroke telemetry exporter).
+  - `quest-tennis-trainer/Assets/_Project/Core/Editor/QuestAndroidBuildScript.cs` — Automated Unity 6 Quest 3 APK builder (`ARM64`, `IL2CPP`, `Vulkan`, `120 Hz`).
+  - `quest-tennis-trainer/Assets/_Project/Tests/TennisPhysicsTests.cs` — 13-test NUnit suite covering Phase 1 & Phase 2 invariants.
   - `quest-tennis-trainer/Assets/_Project/Tests/UnityEngineStubs.cs` — Conditional `#if !UNITY_5_3_OR_NEWER` math/XR shim and `NUnitLite` runner entrypoint for headless `.NET 8` & Docker testing.
   - `quest-tennis-trainer/QuestTennisTrainer.Tests.csproj` — Deterministic `.NET 8` project manifest compiling all C# modules and NUnit tests.
   - `quest-tennis-trainer/Dockerfile` & `quest-tennis-trainer/.dockerignore` — Multi-stage build into Microsoft's hardened distroless `mcr.microsoft.com/dotnet/runtime:8.0-noble-chiseled` image (no shell, no package manager, non-root `$APP_UID`).
   - `quest-tennis-trainer/Assets/_Project/Core/TennisSimulationBootstrap.cs` — 120 Hz physics lock and training mode orchestrator (`BallMachine`, `TennisWall`, `ServePractice`).
   - `quest-tennis-trainer/Assets/_Project/Core/TennisCourtSceneBuilder.cs` — Zero-click procedural ITF court layout generator and full training rig builder.
   - `quest-tennis-trainer/Packages/manifest.json` & `ProjectSettings/ProjectVersion.txt` — Unity 6 LTS (`6000.0.23f1`) URP, OpenXR, and Meta OpenXR configuration.
-  - `quest-tennis-trainer/scripts/sandbox.sh` — One-command CLI for running the hardened distroless Docker test sandbox and Quest 3 120 Hz ADB sideloading.
-  - `.github/workflows/quest-tennis-ci.yml` — Path-filtered GitHub Actions CI/CD workflow running `dotnet test` + GCP Workload Identity Federation for Quest 3 APK storage.
+  - `quest-tennis-trainer/scripts/sandbox.sh` & `quest-tennis-trainer/scripts/test-sandbox-cli.sh` — One-command CLI and automated smoke test suite for the hardened distroless Docker test sandbox and Quest 3 120 Hz ADB sideloading.
+  - `.github/workflows/quest-tennis-ci.yml` — Path-filtered GitHub Actions CI/CD workflow running `dotnet test`, publishing the hardened distroless image to GHCR (`ghcr.io/krishnakasinadhuni/quest-tennis-sandbox:latest`), and supporting GCP Workload Identity Federation for Quest 3 APK storage.
 
 ## 5. Phase 1 Build Roadmap (Sessions 1–8 — All Complete & Merged to `main` in PR #21)
 - **[x] Session 1 — Repo Foundation & Physics Constants** (Done)

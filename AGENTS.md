@@ -5,8 +5,8 @@ This document provides canonical repository-wide instructions for AI coding assi
 ---
 
 ## 📅 Last Reviewed
-- **Date:** 2026-10-29
-- **Areas Inspected:** `quest-tennis-trainer/` (`Assets/_Project/**`, `.github/workflows/quest-tennis-ci.yml`), `services/aws/scripts/ecr-pipeline.sh`, `cdk-patterns/` (`lib/ecr-stack.ts`, `test/ecr.test.ts`), `services/blockchain/` (`node/`, `client/`), `frontend/`, `reverse-image-search-aws/` (`backend/`, `frontend/`, `infrastructure/`), `services/` (`aws/`, `nodejs/`, `python/`, `gcp/mcpGateway/`, `curls/`), `mcp-gateway-instructions/`.
+- **Date:** 2026-10-31
+- **Areas Inspected:** `quest-tennis-trainer/` (`Assets/_Project/**`, `Dockerfile`, `scripts/sandbox.sh`, `.github/workflows/quest-tennis-ci.yml`), `services/aws/scripts/ecr-pipeline.sh`, `cdk-patterns/` (`lib/ecr-stack.ts`, `test/ecr.test.ts`), `services/blockchain/` (`node/`, `client/`), `frontend/`, `reverse-image-search-aws/` (`backend/`, `frontend/`, `infrastructure/`), `services/` (`aws/`, `nodejs/`, `python/`, `gcp/mcpGateway/`, `curls/`), `mcp-gateway-instructions/`.
 
 ---
 
@@ -17,6 +17,7 @@ This document provides canonical repository-wide instructions for AI coding assi
 ```
 hello-world/
 ├── frontend/                         # [WORKING POC] React 19 + TypeScript + MUI + MobX
+├── quest-tennis-trainer/             # [WORKING POC] Unity 6 C# Meta Quest 3 120 Hz VR/MR Tennis Trainer & Docker Sandbox
 ├── reverse-image-search-aws/         # [PARTIAL POC] AWS Bedrock + S3 + OpenSearch backend engine
 │   ├── backend/                      #   → FastAPI app (S3/Bedrock working, OpenSearch stubbed)
 │   ├── frontend/                     #   → [SCAFFOLD] React UI placeholder
@@ -51,6 +52,7 @@ hello-world/
 | Path | Stack | Classification | Purpose & Edit Scope |
 |---|---|---|---|
 | `frontend/` | React 19, TypeScript, MUI v7, MobX | Working POC | Main image comparison & classification web app. Proxies to `localhost:3000`. |
+| `quest-tennis-trainer/` | Unity 6 LTS (C#), OpenXR, `.NET 8`, Docker | Working POC | Meta Quest 3 120 Hz VR/MR tennis trainer (Ball Machine, Wall, Serve, MR Guardian, Swing Coach) & distroless test sandbox. |
 | `reverse-image-search-aws/backend/` | Python 3.10+, FastAPI, boto3, Pillow | Partial POC | AWS Bedrock Titan embedding + S3 indexing. *Note: OpenSearch functions in `app/search.py` are stubs.* |
 | `reverse-image-search-aws/frontend/` | README only | Scaffold | Planned dedicated reverse image search frontend. Do not assume working React code here. |
 | `reverse-image-search-aws/infrastructure/` | AWS CDK, TypeScript | Scaffold | Planned AWS resource provisioning. Currently initialized empty CDK app. |
@@ -112,6 +114,10 @@ Before finishing any task, run the appropriate validation commands:
   ```bash
   ./services/aws/scripts/ecr-pipeline.sh status
   ./services/aws/scripts/ecr-pipeline.sh build-push [service_key|all]
+  ```
+- **Quest 3 Tennis Trainer (`quest-tennis-trainer/`):**
+  ```bash
+  ./quest-tennis-trainer/scripts/sandbox.sh test
   ```
 
 

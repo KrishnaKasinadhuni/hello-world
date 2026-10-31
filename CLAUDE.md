@@ -7,6 +7,7 @@ This file provides concise project instructions for Claude, aligned with canonic
 ## 🗺️ Repo Map & Subproject Status
 
 - `frontend/` — **[WORKING POC]** React 19 + TypeScript + MUI + MobX. Proxies to `localhost:3000`.
+- `quest-tennis-trainer/` — **[WORKING POC]** Unity 6 C# Meta Quest 3 120 Hz VR/MR Tennis Trainer (Ball Machine, Tennis Wall, Serve Practice, MR Guardian, Swing Coach) + hardened distroless `.NET 8` Docker test sandbox.
 - `services/nodejs/imageClassification/` — **[WORKING POC]** Node.js + Hapi + Cohere AI backend.
 - `reverse-image-search-aws/backend/` — **[PARTIAL POC]** FastAPI + Bedrock embedding engine (S3 works, OpenSearch stubbed in `app/search.py`).
 - `reverse-image-search-aws/frontend/` & `infrastructure/` — **[SCAFFOLDS]** Placeholders only.
@@ -47,6 +48,9 @@ cd cdk-patterns && npm run deploy:prod  # Standard mode (production safe)
 # AWS ECR Pipeline
 ./services/aws/scripts/ecr-pipeline.sh status
 ./services/aws/scripts/ecr-pipeline.sh build-push [service_key|all]
+
+# Quest 3 Tennis Trainer (120 Hz Physics & Biomechanics Sandbox)
+./quest-tennis-trainer/scripts/sandbox.sh test
 
 # AWS Role Refresh
 refresh-admin # or ./services/aws/iam-setup/scripts/assume-role.sh
