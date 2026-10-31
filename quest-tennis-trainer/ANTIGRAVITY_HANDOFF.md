@@ -71,7 +71,7 @@
   - `Assets/_Project/UI/TrajectoryArcRenderer.cs` (3D flight ribbon, toss apex ring, and court bounce marker).
 - **[x] Session 10 — Quest 3 Mixed Reality (Passthrough) & Room-Scale Safety Ring** (Done):
   - `Assets/_Project/XR_Input/RoomScaleGuardianVisualizer.cs` (renders the $\pm 1.2\text{m}$ home footwork zone in MR passthrough around the player's feet while projecting the virtual court ahead).
-- **[ ] Session 11 — Biomechanical Swing Coach & Telemetry Exporter**:
+- **[x] Session 11 — Biomechanical Swing Coach & Telemetry Exporter** (Done):
   - `Assets/_Project/Core/SwingCoachAnalyzer.cs` (evaluates low-to-high swing path angle, stringbed face angle at contact, sweet-spot hit rate %, and exports session telemetry).
 - **[ ] Session 12 — Unity 6 Automated Quest 3 APK Builder**:
   - `Assets/_Project/Core/Editor/QuestAndroidBuildScript.cs` (one-click Unity 6 ARM64 + Vulkan + Dynamic FFR APK builder outputting directly to `build/Android/QuestTennisTrainer.apk`).

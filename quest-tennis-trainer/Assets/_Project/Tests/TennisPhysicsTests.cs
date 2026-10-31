@@ -322,6 +322,39 @@ namespace QuestTennisTrainer.Tests
             Assert.AreEqual(1.0f, breachedStatus.DynamicPassthroughOpacity, Epsilon);
             Assert.IsTrue(breachedStatus.ShouldPauseBallMachine);
         }
+
+        [Test]
+        public void SwingCoachAnalyzer_ComputesBiomechanicsAndExportsCompactTelemetryTable()
+        {
+            SwingCoachAnalyzer coach = new SwingCoachAnalyzer();
+
+            // Simulate a 20-degree low-to-high topspin groundstroke with a square racket face
+            ImpactData topspinHit = new ImpactData
+            {
+                ImpactNormal = new Vector3(0f, 0.03f, 0.9995f).normalized,
+                OutgoingSpeedKmh = 118f,
+                OutgoingSpinRpm = 2450f,
+                SweetSpotAccuracy = 0.92f,
+                IsFrameHit = false
+            };
+
+            float rad20 = 20f * Mathf.Deg2Rad;
+            Vector3 racketVel = new Vector3(0f, Mathf.Sin(rad20) * 22f, Mathf.Cos(rad20) * 22f);
+
+            StrokeBiomechanicsReport report = coach.RecordAndAnalyzeStroke(topspinHit, racketVel);
+
+            Assert.AreEqual(20f, report.SwingPathAngleDeg, 0.25f);
+            Assert.AreEqual(92f, report.SweetSpotPercent, Epsilon);
+            StringAssert.Contains("Textbook low-to-high topspin brush", report.CoachingCue);
+
+            SessionCoachingSummary summary = coach.ComputeSessionSummary();
+            Assert.AreEqual(1, summary.TotalShots);
+            Assert.AreEqual(100f, summary.SweetSpotHitRatePercent, Epsilon);
+
+            string compactToonTable = coach.ExportSessionToCompactTable();
+            StringAssert.Contains("strokes[shot_idx,speed_kmh,spin_rpm,swing_deg,face_deg,sweet_pct,frame_hit]:", compactToonTable);
+            StringAssert.Contains("1,118,2450,20.0,", compactToonTable);
+        }
     }
 }
 
