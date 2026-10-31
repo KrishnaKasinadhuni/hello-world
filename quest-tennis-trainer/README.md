@@ -38,6 +38,10 @@ To keep token and AI Pro credit usage low, development is split into 5 self-cont
 - **[x] Session 6 — Hardened Distroless Docker Sandbox & `.NET 8` NUnit Runner**: Add `Dockerfile` (`mcr.microsoft.com/dotnet/runtime:8.0-noble-chiseled`), `.dockerignore`, `QuestTennisTrainer.Tests.csproj`, and `UnityEngineStubs.cs` (`#if !UNITY_5_3_OR_NEWER`).
 - **[x] Session 7 — Zero-Click 3D Scene Bootstrapper**: Add `TennisSimulationBootstrap.cs` (120 Hz lock & mode switcher) and `TennisCourtSceneBuilder.cs` (procedural regulation court & rig wiring).
 - **[x] Session 8 — Unity 6 Package Manifest & Sandbox CLI Script**: Add `Packages/manifest.json`, `ProjectSettings/ProjectVersion.txt`, and `scripts/sandbox.sh`.
+- **[x] Session 9 — Spatial Training HUD & 3D Flight Trail**: Add `TrainingHudController.cs` and `TrajectoryArcRenderer.cs`.
+- **[x] Session 10 — Quest 3 Mixed Reality & Room-Scale Safety Ring**: Add `RoomScaleGuardianVisualizer.cs` with dynamic passthrough fade.
+- **[x] Session 11 — Biomechanical Swing Coach & TOON Telemetry Exporter**: Add `SwingCoachAnalyzer.cs`.
+- **[x] Session 12 — Unity 6 One-Click Quest 3 APK Builder**: Add `QuestAndroidBuildScript.cs`.
 
 ## Running the Hardened Physics Sandbox & Quest 3 Sideloader
 

@@ -20,6 +20,7 @@
 ```
 hello-world/
 ├── frontend/                         # React + TypeScript image classification UI (working)
+├── quest-tennis-trainer/             # [WORKING POC] Meta Quest 3 120 Hz VR/MR Tennis Trainer (Unity 6 C# + .NET 8 Docker Sandbox)
 ├── reverse-image-search-aws/         # Full-stack reverse image search engine on AWS (partial POC)
 │   ├── backend/                      #   → FastAPI + Bedrock + OpenSearch (working core, placeholders in search)
 │   ├── frontend/                     #   → scaffold only (not implemented)
@@ -308,6 +309,18 @@ cd services/blockchain/client && npm run dev
 
 ---
 
+### 11. `quest-tennis-trainer/` — Meta Quest 3 120 Hz VR/MR Tennis Trainer
+**Status:** ✅ Working POC (Phase 1 & Phase 2 Complete — 13/13 NUnit Tests Passing)  
+**Stack:** Unity 6 LTS (`6000.0.23f1`), C#, OpenXR, Meta XR SDK, `.NET 8` NUnit Lite, Hardened Distroless Docker (`mcr.microsoft.com/dotnet/runtime:8.0-noble-chiseled`)  
+**What it does:** A single-player Meta Quest 3 VR & Mixed Reality tennis training simulation engineered for locked **120 Hz** physics (`Time.fixedDeltaTime = 0.008333f`, 10 sub-steps per frame) and **basic room-scale movement only** ($\pm 1.2\text{m}$ lateral reach, zero artificial thumbstick locomotion). Includes three single-player drills (**Programmable Ball Machine**, **Tennis Wall with 15% Smart Return Funnel**, and **Two-Handed Serve Practice** with 200 ms IMU occlusion compensation), **Spatial Courtside Serve Radar & Wrist HUD**, **Dynamic MR Passthrough & Room-Scale Safety Ring**, and a **Biomechanical Swing Coach** with TOON tabular stroke telemetry export.
+
+**To run the 120 Hz physics & biomechanics test suite in the hardened Docker sandbox:**
+```bash
+./quest-tennis-trainer/scripts/sandbox.sh test
+```
+
+---
+
 ## 🔧 AWS Account & Infrastructure Context
 
 | Resource | Value |
@@ -335,6 +348,7 @@ cd services/blockchain/client && npm run dev
 | `services/python/configManager/` | Python service | ✅ Working POC |
 | `services/gcp/mcpGateway/` | Cloud Run Service | ✅ Working Service |
 | `services/blockchain/` | Rust & TS 7 Blockchain | ✅ Working POC (Multi-node P2P & Explorer) |
+| `quest-tennis-trainer/` | Unity 6 C# / Meta Quest 3 VR & MR | ✅ Working POC (120 Hz Physics, MR Guardian & Swing Coach) |
 | `services/aws/iam-setup/` | Bash scripts | ✅ In active use |
 | `services/aws/scripts/` | ECR Pipeline & Docker | ✅ In active use |
 | `services/curls/` | Shell scripts | ✅ Reference |
