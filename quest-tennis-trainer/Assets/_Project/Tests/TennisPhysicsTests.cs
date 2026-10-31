@@ -275,6 +275,53 @@ namespace QuestTennisTrainer.Tests
 
             Assert.Less(topEnd.y, sliceEnd.y, "Predicted topspin arc must dip lower than predicted slice arc.");
         }
+
+        [Test]
+        public void RoomScaleGuardianVisualizer_EvaluatesBoundaryMarginAndFadesPassthroughNearEdge()
+        {
+            Vector3 home = Vector3.zero;
+
+            // 1. Player centered at home marker -> SafeCenter
+            RoomScaleSafetyStatus centerStatus = RoomScaleGuardianVisualizer.EvaluateSafetyStatus(
+                home,
+                new Vector3(0.15f, 1.70f, 0.05f),
+                new Vector3(0.45f, 1.20f, 0.20f),
+                1.20f,
+                0.90f,
+                0.25f,
+                QuestEnvironmentBlendMode.FullVirtualStadium);
+
+            Assert.AreEqual(RoomScaleSafetyState.SafeCenter, centerStatus.SafetyState);
+            Assert.AreEqual(0f, centerStatus.DynamicPassthroughOpacity, Epsilon);
+            Assert.IsFalse(centerStatus.ShouldPauseBallMachine);
+
+            // 2. Extended racket tip reaches 1.10m laterally (within 0.25m caution zone of 1.20m boundary)
+            RoomScaleSafetyStatus cautionStatus = RoomScaleGuardianVisualizer.EvaluateSafetyStatus(
+                home,
+                new Vector3(0.60f, 1.70f, 0f),
+                new Vector3(1.10f, 1.35f, 0f),
+                1.20f,
+                0.90f,
+                0.25f,
+                QuestEnvironmentBlendMode.FullVirtualStadium);
+
+            Assert.AreEqual(RoomScaleSafetyState.CautionNearEdge, cautionStatus.SafetyState);
+            Assert.Greater(cautionStatus.DynamicPassthroughOpacity, 0.50f, "Passthrough must fade in when racket tip nears boundary.");
+
+            // 3. Stepping past 1.20m breaches boundary and pauses ball machine feeds
+            RoomScaleSafetyStatus breachedStatus = RoomScaleGuardianVisualizer.EvaluateSafetyStatus(
+                home,
+                new Vector3(1.32f, 1.70f, 0f),
+                new Vector3(1.50f, 1.35f, 0f),
+                1.20f,
+                0.90f,
+                0.25f,
+                QuestEnvironmentBlendMode.FullVirtualStadium);
+
+            Assert.AreEqual(RoomScaleSafetyState.BoundaryBreached, breachedStatus.SafetyState);
+            Assert.AreEqual(1.0f, breachedStatus.DynamicPassthroughOpacity, Epsilon);
+            Assert.IsTrue(breachedStatus.ShouldPauseBallMachine);
+        }
     }
 }
 

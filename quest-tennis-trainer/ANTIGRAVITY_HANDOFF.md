@@ -69,7 +69,7 @@
 - **[x] Session 9 — Spatial Training HUD, Serve Radar & 3D Ball Trail** (Done):
   - `Assets/_Project/UI/TrainingHudController.cs` (courtside radar board & wrist HUD for km/h, RPM, net clearance cm, and rally streak).
   - `Assets/_Project/UI/TrajectoryArcRenderer.cs` (3D flight ribbon, toss apex ring, and court bounce marker).
-- **[ ] Session 10 — Quest 3 Mixed Reality (Passthrough) & Room-Scale Safety Ring**:
+- **[x] Session 10 — Quest 3 Mixed Reality (Passthrough) & Room-Scale Safety Ring** (Done):
   - `Assets/_Project/XR_Input/RoomScaleGuardianVisualizer.cs` (renders the $\pm 1.2\text{m}$ home footwork zone in MR passthrough around the player's feet while projecting the virtual court ahead).
 - **[ ] Session 11 — Biomechanical Swing Coach & Telemetry Exporter**:
   - `Assets/_Project/Core/SwingCoachAnalyzer.cs` (evaluates low-to-high swing path angle, stringbed face angle at contact, sweet-spot hit rate %, and exports session telemetry).
