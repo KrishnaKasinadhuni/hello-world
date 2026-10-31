@@ -65,8 +65,8 @@
 - **[x] Session 7 — Zero-Click 3D Scene Bootstrapper (`TennisSimulationBootstrap.cs` & `TennisCourtSceneBuilder.cs`)** (Done)
 - **[x] Session 8 — Unity 6 Package Manifest (`Packages/manifest.json`) & Sandbox CLI Script (`scripts/sandbox.sh`)** (Done)
 
-## 6. Phase 2 Roadmap (Sessions 9–12 — Ready for Tomorrow)
-- **[ ] Session 9 — Spatial Training HUD, Serve Radar & 3D Ball Trail**:
+## 6. Phase 2 Roadmap (Sessions 9–12)
+- **[x] Session 9 — Spatial Training HUD, Serve Radar & 3D Ball Trail** (Done):
   - `Assets/_Project/UI/TrainingHudController.cs` (courtside radar board & wrist HUD for km/h, RPM, net clearance cm, and rally streak).
   - `Assets/_Project/UI/TrajectoryArcRenderer.cs` (3D flight ribbon, toss apex ring, and court bounce marker).
 - **[ ] Session 10 — Quest 3 Mixed Reality (Passthrough) & Room-Scale Safety Ring**:

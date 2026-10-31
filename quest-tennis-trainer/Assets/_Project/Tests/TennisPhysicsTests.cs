@@ -7,6 +7,7 @@ using QuestTennisTrainer.TrainingModes.WallPractice;
 using QuestTennisTrainer.TrainingModes.BallMachine;
 using QuestTennisTrainer.TrainingModes.ServeTrainer;
 using QuestTennisTrainer.XR_Input;
+using QuestTennisTrainer.UI;
 
 namespace QuestTennisTrainer.Tests
 {
@@ -240,6 +241,39 @@ namespace QuestTennisTrainer.Tests
             Assert.AreEqual(1, rig.TennisWall.TargetZoneHits);
             Assert.AreEqual(100, rig.TennisWall.TotalScore);
             Assert.Less(ball.Velocity.z, 0f, "Ball must rebound back toward the player (-Z).");
+        }
+
+        [Test]
+        public void TrainingHudAndTrajectoryArc_FormatTelemetryAndPredictMagnusArcAccurately()
+        {
+            TrainingHudController hud = new TrainingHudController();
+
+            ImpactData sweetHit = new ImpactData
+            {
+                OutgoingSpeedKmh = 142.4f,
+                OutgoingSpinRpm = 2650f,
+                SpinAxis = Vector3.right,
+                SweetSpotAccuracy = 0.94f,
+                IsFrameHit = false
+            };
+
+            hud.HandleRacketImpact(sweetHit);
+            Assert.AreEqual("142 km/h | 2650 RPM (Topspin)", hud.LatestSnapshot.FormattedRadarReadout);
+            Assert.AreEqual(94f, hud.LatestSnapshot.SweetSpotPercent, Epsilon);
+
+            // Predict 60 frames (0.5s) of forward flight with topspin vs slice and verify topspin dips lower
+            TennisPhysicsConfig cfg = TennisPhysicsConfig.CreateDefault();
+            Vector3 startPos = new Vector3(0f, 1.2f, 0f);
+            Vector3 startVel = new Vector3(0f, 3.5f, 24f);
+            float omegaRad = 2800f * (2f * Mathf.PI / 60f);
+
+            var topspinArc = TrajectoryArcRenderer.PredictFlightArc(startPos, startVel, new Vector3(omegaRad, 0f, 0f), cfg, 45);
+            var sliceArc = TrajectoryArcRenderer.PredictFlightArc(startPos, startVel, new Vector3(-omegaRad, 0f, 0f), cfg, 45);
+
+            Vector3 topEnd = topspinArc[topspinArc.Count - 1];
+            Vector3 sliceEnd = sliceArc[sliceArc.Count - 1];
+
+            Assert.Less(topEnd.y, sliceEnd.y, "Predicted topspin arc must dip lower than predicted slice arc.");
         }
     }
 }
