@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **[quest-tennis-trainer]**: Completed Phase 3 (Sessions 13–15) for the Meta Quest 3 VR/MR tennis trainer (`quest-tennis-trainer/`):
+  - **Session 13**: Procedural Acoustic Impact Synthesizer (`RacketAudioSynthesizer.cs`) generating 44.1 kHz PCM waveforms for sweet-spot stringbed "pop" (`420 Hz` + `1120 Hz` harmonic + felt snap), graphite frame "clank" (`940 Hz` + `1610 Hz`), and court/wall bounce thuds (`120–195 Hz`), paired 1:1 with `RacketHapticsController.cs`.
+  - **Session 14**: Adaptive AI Drill Difficulty Director (`AdaptiveDrillDirector.cs`) scaling `BallMachineController` feed speed (`62–124 km/h`), spin (`800–3200 RPM`), and interval (`3.8–1.7s`) across 5 progressive skill tiers based on player sweet-spot accuracy and consistency, clamped within $\pm 1.20\text{m}$ room-scale reach.
+  - **Session 15**: Local-first TOON stroke telemetry persistence & SHA-256 integrity verifier (`SessionTelemetryPersistence.cs`) with `.toon` file signing, tamper detection, and GCP Cloud Storage / Firestore JSON envelope generation.
 - **[quest-tennis-trainer]**: Completed Phase 2 (Sessions 9–12) for the Meta Quest 3 VR/MR tennis trainer (`quest-tennis-trainer/`):
   - **Session 9**: Spatial Training HUD & Serve Speed Radar (`TrainingHudController.cs`), non-dominant wrist HUD, 3D trajectory ribbon, toss apex target ring, and color-coded court bounce markers (`TrajectoryArcRenderer.cs`).
   - **Session 10**: Quest 3 Mixed Reality (Passthrough) & $\pm 1.2\text{m}$ Room-Scale Safety Ring (`RoomScaleGuardianVisualizer.cs`) with `SafeCenter` / `CautionNearEdge` / `BoundaryBreached` states, dynamic MR passthrough fade, and automatic ball machine pause on boundary breach.

@@ -370,6 +370,125 @@ namespace QuestTennisTrainer.Tests
             Assert.AreEqual(120, manifest.TargetRefreshRateHz);
             Assert.AreEqual("build/Android/QuestTennisTrainer.apk", manifest.OutputApkRelativePath);
         }
+
+        [Test]
+        public void RacketAudioSynthesizer_GeneratesDistinctSweetSpotPopFrameClankAndBounceWaveforms()
+        {
+            RacketAudioSynthesizer synth = new RacketAudioSynthesizer();
+
+            ImpactData sweetImpact = new ImpactData
+            {
+                OutgoingSpeedKmh = 128f,
+                SweetSpotAccuracy = 0.95f,
+                IsFrameHit = false
+            };
+
+            ProceduralImpactAudioReport sweetReport = synth.PlayRacketImpactAudio(sweetImpact);
+            Assert.AreEqual("SweetSpotPop", sweetReport.SoundCategory);
+            Assert.AreEqual(RacketAudioSynthesizer.DefaultSampleRateHz, sweetReport.SampleRateHz);
+            Assert.Greater(sweetReport.RmsEnergy, 0.02f);
+            Assert.LessOrEqual(sweetReport.PeakAmplitude, 1.0f);
+
+            ImpactData frameImpact = new ImpactData
+            {
+                OutgoingSpeedKmh = 90f,
+                SweetSpotAccuracy = 0.20f,
+                IsFrameHit = true
+            };
+
+            ProceduralImpactAudioReport frameReport = synth.PlayRacketImpactAudio(frameImpact);
+            Assert.AreEqual("FrameClank", frameReport.SoundCategory);
+            Assert.Greater(frameReport.FundamentalFreqHz, sweetReport.FundamentalFreqHz);
+
+            ProceduralImpactAudioReport wallBounce = RacketAudioSynthesizer.SynthesizeBounceThud(CourtSurfaceType.ConcreteWall, 24f);
+            Assert.AreEqual("Bounce_ConcreteWall", wallBounce.SoundCategory);
+            Assert.Greater(wallBounce.RmsEnergy, 0.01f);
+        }
+
+        [Test]
+        public void AdaptiveDrillDirector_PromotesOnQualityStreakAndDemotesOnErrorsWithinRoomScaleBounds()
+        {
+            AdaptiveDrillDirector director = new AdaptiveDrillDirector();
+            director.ResetToTier(AdaptiveDifficultyTier.Tier2_BaselineRally);
+
+            // 3 consecutive quality returns promote Tier2_BaselineRally -> Tier3_HeavyTopspin
+            director.EvaluatePlayerStroke(clearedNet: true, landedInBounds: true, sweetSpotAccuracy: 0.88f, isFrameHit: false);
+            director.EvaluatePlayerStroke(clearedNet: true, landedInBounds: true, sweetSpotAccuracy: 0.91f, isFrameHit: false);
+            AdaptiveDrillSnapshot promoted = director.EvaluatePlayerStroke(clearedNet: true, landedInBounds: true, sweetSpotAccuracy: 0.85f, isFrameHit: false);
+
+            Assert.AreEqual(AdaptiveDifficultyTier.Tier3_HeavyTopspin, promoted.CurrentTier);
+            Assert.AreEqual(94f, promoted.RecommendedFeed.LaunchSpeedKmh, Epsilon);
+            Assert.AreEqual(2200f, promoted.RecommendedFeed.TopspinRpm, Epsilon);
+            Assert.LessOrEqual(Mathf.Abs(promoted.RecommendedFeed.TargetLateralOffsetMeters), 1.20f + Epsilon);
+
+            // 2 consecutive errors demote Tier3_HeavyTopspin -> Tier2_BaselineRally
+            director.EvaluatePlayerStroke(clearedNet: false, landedInBounds: false, sweetSpotAccuracy: 0.50f, isFrameHit: false);
+            AdaptiveDrillSnapshot demoted = director.EvaluatePlayerStroke(clearedNet: true, landedInBounds: false, sweetSpotAccuracy: 0.30f, isFrameHit: true);
+
+            Assert.AreEqual(AdaptiveDifficultyTier.Tier2_BaselineRally, demoted.CurrentTier);
+            Assert.AreEqual(78f, demoted.RecommendedFeed.LaunchSpeedKmh, Epsilon);
+        }
+
+        [Test]
+        public void SessionTelemetryPersistence_SavesVerifiableSha256ToonFileAndBuildsGcpEnvelope()
+        {
+            SwingCoachAnalyzer coach = new SwingCoachAnalyzer();
+            ImpactData hit = new ImpactData
+            {
+                ImpactNormal = new Vector3(0f, 0.04f, 0.9992f).normalized,
+                OutgoingSpeedKmh = 122f,
+                OutgoingSpinRpm = 2600f,
+                SweetSpotAccuracy = 0.90f,
+                IsFrameHit = false
+            };
+            coach.RecordAndAnalyzeStroke(hit, new Vector3(0f, 6f, 20f));
+
+            string tempDir = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "quest-tennis-tests-" + System.Guid.NewGuid().ToString("N"));
+            try
+            {
+                PersistedSessionManifest manifest = SessionTelemetryPersistence.SaveSessionToDirectory(
+                    tempDir,
+                    "session-phase3-verify",
+                    coach,
+                    AdaptiveDifficultyTier.Tier4_ProPace);
+
+                Assert.AreEqual(1, manifest.TotalStrokes);
+                Assert.AreEqual(64, manifest.Sha256Hex.Length);
+
+                bool verified = SessionTelemetryPersistence.TryLoadAndVerifySessionFile(
+                    manifest.FilePath,
+                    out string loadedToon,
+                    out string expectedHash);
+
+                Assert.IsTrue(verified, "Unmodified TOON file must pass SHA-256 verification.");
+                Assert.AreEqual(manifest.Sha256Hex, expectedHash);
+                StringAssert.Contains("1,122,2600,", loadedToon);
+
+                // Tamper with the file and verify SHA-256 check rejects it
+                System.IO.File.AppendAllText(manifest.FilePath, "\n2,999,9999,0,0,100,0\n");
+                bool tamperedVerified = SessionTelemetryPersistence.TryLoadAndVerifySessionFile(
+                    manifest.FilePath,
+                    out _,
+                    out _);
+                Assert.IsFalse(tamperedVerified, "Tampered TOON file must fail SHA-256 verification.");
+
+                string gcpJson = SessionTelemetryPersistence.BuildGcpTelemetryEnvelopeJson(
+                    "session-phase3-verify",
+                    coach,
+                    AdaptiveDifficultyTier.Tier4_ProPace);
+
+                StringAssert.Contains("\"hardware\":\"Meta Quest 3\"", gcpJson);
+                StringAssert.Contains("\"highestAdaptiveTier\":\"Tier4_ProPace\"", gcpJson);
+                StringAssert.Contains(manifest.Sha256Hex, gcpJson);
+            }
+            finally
+            {
+                if (System.IO.Directory.Exists(tempDir))
+                {
+                    System.IO.Directory.Delete(tempDir, true);
+                }
+            }
+        }
     }
 }
 

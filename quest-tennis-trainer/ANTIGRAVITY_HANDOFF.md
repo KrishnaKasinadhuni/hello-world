@@ -34,23 +34,26 @@
 ## 4. Current Repository State
 - **Local Repo Path**: `/Users/krishnakasinadhuni/projects/hello-world`
 - **Subproject Path**: `/Users/krishnakasinadhuni/projects/hello-world/quest-tennis-trainer`
-- **Active Git Branch**: `main` (Phase 1 & Phase 2 Complete)
-- **Completed & Committed Files (All 12 Sessions Complete)**:
-  - `quest-tennis-trainer/README.md` — Architecture overview and 12-session roadmap.
+- **Active Git Branch**: `main` (Phase 1, Phase 2 & Phase 3 Complete — All 15 Sessions Complete)
+- **Completed & Committed Files (All 15 Sessions Complete)**:
+  - `quest-tennis-trainer/README.md` — Architecture overview and 15-session roadmap.
   - `quest-tennis-trainer/.gitignore` — Unity 6, C#, and Meta Quest `.apk`/`.aab` ignore rules.
   - `quest-tennis-trainer/Assets/_Project/Core/TennisPhysicsConfig.cs` — Pure C# struct with 120 Hz timing, ITF ball constants, drag/Magnus coefficients, stringbed restitution, and room-scale reach parameters.
   - `quest-tennis-trainer/Assets/_Project/Physics/BallAerodynamics.cs` — Pure C# / Unity aerodynamic solver for gravity, air drag, Magnus spin curve, and court/wall bounce restitution.
   - `quest-tennis-trainer/Assets/_Project/Physics/SweptRacketCollider.cs` — 120 Hz 10-substep Hermite spline collision detector with stringbed sweet-spot vs frame restitution, tangential friction, and topspin/slice/kick spin calculation.
   - `quest-tennis-trainer/Assets/_Project/TrainingModes/WallPractice/TennisWallController.cs` — Backboard controller with 0.914m net-line fault detection, target zones, vertical topspin reflection, and Smart Return Funnel (85% true angle + 15% center assist).
   - `quest-tennis-trainer/Assets/_Project/XR_Input/RacketHapticsController.cs` — Parametric OpenXR/Quest 3 haptics controller (200 Hz sweet-spot pulse, 75 Hz frame mishit vibration, and 100 Hz serve toss micro-tick).
+  - `quest-tennis-trainer/Assets/_Project/XR_Input/RacketAudioSynthesizer.cs` — Zero-asset 44.1 kHz procedural PCM acoustic impact synthesizer (sweet-spot pop, frame clank, and court/wall bounce thuds).
   - `quest-tennis-trainer/Assets/_Project/TrainingModes/BallMachine/BallMachineController.cs` — Programmable ball machine constrained to Quest 3 Guardian & $\pm 1.2\text{m}$ room-scale reach, with drill presets, net clearance, and landing depth heatmap.
+  - `quest-tennis-trainer/Assets/_Project/TrainingModes/BallMachine/AdaptiveDrillDirector.cs` — 5-tier Adaptive AI Drill Difficulty Director scaling pace and spin RPM based on rolling sweet-spot accuracy while staying within $\pm 1.2\text{m}$ room-scale bounds.
   - `quest-tennis-trainer/Assets/_Project/TrainingModes/ServeTrainer/ServeTossController.cs` — Two-handed serve trainer with velocity-smoothed toss release, apex predictor, 200 ms behind-the-back IMU occlusion compensation, and Deuce/Ad Wide/Body/T service box radar telemetry.
   - `quest-tennis-trainer/Assets/_Project/UI/TrainingHudController.cs` — Spatial courtside Serve & Shot Speed Radar board + non-dominant wrist HUD.
   - `quest-tennis-trainer/Assets/_Project/UI/TrajectoryArcRenderer.cs` — 3D ball flight ribbon, serve toss apex target ring, and color-coded bounce markers.
   - `quest-tennis-trainer/Assets/_Project/XR_Input/RoomScaleGuardianVisualizer.cs` — Quest 3 Mixed Reality passthrough controller and $\pm 1.2\text{m}$ room-scale safety ring (`SafeCenter`, `CautionNearEdge`, `BoundaryBreached`) with auto-pause of ball machine.
   - `quest-tennis-trainer/Assets/_Project/Core/SwingCoachAnalyzer.cs` — Biomechanical swing analyzer (swing path angle, racket face tilt angle, actionable coaching cues, and TOON tabular stroke telemetry exporter).
+  - `quest-tennis-trainer/Assets/_Project/Core/SessionTelemetryPersistence.cs` — Local `.toon` telemetry persistence with deterministic SHA-256 integrity headers, tamper detection, and GCP Cloud Storage / Firestore JSON envelope builder.
   - `quest-tennis-trainer/Assets/_Project/Core/Editor/QuestAndroidBuildScript.cs` — Automated Unity 6 Quest 3 APK builder (`ARM64`, `IL2CPP`, `Vulkan`, `120 Hz`).
-  - `quest-tennis-trainer/Assets/_Project/Tests/TennisPhysicsTests.cs` — 13-test NUnit suite covering Phase 1 & Phase 2 invariants.
+  - `quest-tennis-trainer/Assets/_Project/Tests/TennisPhysicsTests.cs` — 16-test NUnit suite covering Phase 1, Phase 2 & Phase 3 invariants.
   - `quest-tennis-trainer/Assets/_Project/Tests/UnityEngineStubs.cs` — Conditional `#if !UNITY_5_3_OR_NEWER` math/XR shim and `NUnitLite` runner entrypoint for headless `.NET 8` & Docker testing.
   - `quest-tennis-trainer/QuestTennisTrainer.Tests.csproj` — Deterministic `.NET 8` project manifest compiling all C# modules and NUnit tests.
   - `quest-tennis-trainer/Dockerfile` & `quest-tennis-trainer/.dockerignore` — Multi-stage build into Microsoft's hardened distroless `mcr.microsoft.com/dotnet/runtime:8.0-noble-chiseled` image (no shell, no package manager, non-root `$APP_UID`).
@@ -81,8 +84,10 @@
 - **[x] Session 12 — Unity 6 Automated Quest 3 APK Builder** (Done):
   - `Assets/_Project/Core/Editor/QuestAndroidBuildScript.cs` (one-click Unity 6 ARM64 + Vulkan + Dynamic FFR APK builder outputting directly to `build/Android/QuestTennisTrainer.apk`).
 
-## 7. Prompt to Paste Directly into Antigravity Tomorrow
-
-> We are continuing Phase 2 of `quest-tennis-trainer` inside `/Users/krishnakasinadhuni/projects/hello-world/quest-tennis-trainer`.
-> First, read `quest-tennis-trainer/ANTIGRAVITY_HANDOFF.md`.
-> Following our 2–3 files per session pacing rule, let's start **Session 9** (`TrainingHudController.cs` & `TrajectoryArcRenderer.cs`) and verify with `./quest-tennis-trainer/scripts/sandbox.sh test`.
+## 7. Phase 3 Roadmap (Sessions 13–15 — All Complete)
+- **[x] Session 13 — Procedural Acoustic Impact Synthesizer** (Done):
+  - `Assets/_Project/XR_Input/RacketAudioSynthesizer.cs` (44.1 kHz mono PCM waveform synthesizer for sweet-spot pop, graphite frame clank, and court/wall bounce thuds).
+- **[x] Session 14 — Adaptive AI Drill Difficulty Director** (Done):
+  - `Assets/_Project/TrainingModes/BallMachine/AdaptiveDrillDirector.cs` (5-tier adaptive progression scaling ball machine pace and spin RPM based on player sweet-spot accuracy and consistency, clamped within $\pm 1.20\text{m}$ room-scale reach).
+- **[x] Session 15 — Local & Cloud TOON Telemetry Persistence** (Done):
+  - `Assets/_Project/Core/SessionTelemetryPersistence.cs` (SHA-256 signed `.toon` session persistence, tamper detection, and GCP Cloud Storage / Firestore JSON envelope generator).

@@ -42,6 +42,9 @@ To keep token and AI Pro credit usage low, development is split into 5 self-cont
 - **[x] Session 10 — Quest 3 Mixed Reality & Room-Scale Safety Ring**: Add `RoomScaleGuardianVisualizer.cs` with dynamic passthrough fade.
 - **[x] Session 11 — Biomechanical Swing Coach & TOON Telemetry Exporter**: Add `SwingCoachAnalyzer.cs`.
 - **[x] Session 12 — Unity 6 One-Click Quest 3 APK Builder**: Add `QuestAndroidBuildScript.cs`.
+- **[x] Session 13 — Procedural Acoustic Impact Synthesizer**: Add `RacketAudioSynthesizer.cs` (44.1 kHz PCM sweet-spot pop, frame clank & court/wall bounce thud waveforms).
+- **[x] Session 14 — Adaptive AI Drill Difficulty Director**: Add `AdaptiveDrillDirector.cs` (5-tier difficulty ladder scaling pace and spin RPM within $\pm 1.2\text{m}$ room-scale reach).
+- **[x] Session 15 — Local & Cloud TOON Telemetry Persistence**: Add `SessionTelemetryPersistence.cs` (SHA-256 signed `.toon` session files & GCP Cloud Storage / Firestore JSON envelope builder).
 
 ## Running the Hardened Physics Sandbox & Quest 3 Sideloader
 

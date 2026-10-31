@@ -20,6 +20,7 @@ cmd_test() {
   echo "==> Running NUnit 120Hz Physics & Training Drill Suite (non-root, read-only, cap-drop=ALL)..."
   docker run --rm \
     --read-only \
+    --tmpfs /tmp:rw,noexec,nosuid,size=16m \
     --cap-drop=ALL \
     --security-opt=no-new-privileges \
     "${IMAGE_NAME}"

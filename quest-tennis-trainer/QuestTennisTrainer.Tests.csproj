@@ -7,7 +7,7 @@
     <Nullable>disable</Nullable>
     <GenerateProgramFile>false</GenerateProgramFile>
     <Deterministic>true</Deterministic>
-    <NoWarn>CS0649;CS0414</NoWarn>
+    <NoWarn>CS0649;CS0414;CS0169</NoWarn>
     <RootNamespace>QuestTennisTrainer</RootNamespace>
   </PropertyGroup>
 
