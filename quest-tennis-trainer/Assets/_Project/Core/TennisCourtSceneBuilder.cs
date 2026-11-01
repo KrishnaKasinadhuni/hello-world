@@ -4,6 +4,7 @@ using QuestTennisTrainer.Physics;
 using QuestTennisTrainer.TrainingModes.BallMachine;
 using QuestTennisTrainer.TrainingModes.WallPractice;
 using QuestTennisTrainer.TrainingModes.ServeTrainer;
+using QuestTennisTrainer.UI;
 using QuestTennisTrainer.XR_Input;
 
 namespace QuestTennisTrainer.Core
@@ -101,7 +102,28 @@ namespace QuestTennisTrainer.Core
             GameObject serveObj = new GameObject("TwoHanded_ServeTrainer");
             ServeTossController serve = serveObj.AddComponent<ServeTossController>();
 
-            bootstrap.BindSubsystems(ball, racket, haptics, machine, wall, serve, homeMarkerObj.transform);
+            // Phase 2 & Phase 3 Subsystems
+            TrainingHudController hud = rootObj.AddComponent<TrainingHudController>();
+            TrajectoryArcRenderer arcRenderer = ballObj.AddComponent<TrajectoryArcRenderer>();
+            RoomScaleGuardianVisualizer guardian = homeMarkerObj.AddComponent<RoomScaleGuardianVisualizer>();
+            SwingCoachAnalyzer coach = rootObj.AddComponent<SwingCoachAnalyzer>();
+            RacketAudioSynthesizer audio = racketObj.AddComponent<RacketAudioSynthesizer>();
+            AdaptiveDrillDirector adaptiveDirector = machineObj.AddComponent<AdaptiveDrillDirector>();
+
+            bootstrap.BindSubsystems(
+                ball,
+                racket,
+                haptics,
+                machine,
+                wall,
+                serve,
+                homeMarkerObj.transform,
+                hud,
+                arcRenderer,
+                guardian,
+                coach,
+                audio,
+                adaptiveDirector);
             return bootstrap;
 #else
             // Headless .NET 8 / Docker Sandbox construction
@@ -119,7 +141,27 @@ namespace QuestTennisTrainer.Core
 
             ServeTossController serve = new ServeTossController();
 
-            bootstrap.BindSubsystems(ball, racket, haptics, machine, wall, serve, homeMarker);
+            TrainingHudController hud = new TrainingHudController();
+            TrajectoryArcRenderer arcRenderer = new TrajectoryArcRenderer();
+            RoomScaleGuardianVisualizer guardian = new RoomScaleGuardianVisualizer();
+            SwingCoachAnalyzer coach = new SwingCoachAnalyzer();
+            RacketAudioSynthesizer audio = new RacketAudioSynthesizer();
+            AdaptiveDrillDirector adaptiveDirector = new AdaptiveDrillDirector();
+
+            bootstrap.BindSubsystems(
+                ball,
+                racket,
+                haptics,
+                machine,
+                wall,
+                serve,
+                homeMarker,
+                hud,
+                arcRenderer,
+                guardian,
+                coach,
+                audio,
+                adaptiveDirector);
             return bootstrap;
 #endif
         }

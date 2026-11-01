@@ -91,3 +91,5 @@
   - `Assets/_Project/TrainingModes/BallMachine/AdaptiveDrillDirector.cs` (5-tier adaptive progression scaling ball machine pace and spin RPM based on player sweet-spot accuracy and consistency, clamped within $\pm 1.20\text{m}$ room-scale reach).
 - **[x] Session 15 — Local & Cloud TOON Telemetry Persistence** (Done):
   - `Assets/_Project/Core/SessionTelemetryPersistence.cs` (SHA-256 signed `.toon` session persistence, tamper detection, and GCP Cloud Storage / Firestore JSON envelope generator).
+- **[x] Session 16 — Full-Stack Rig Integration** (Done):
+  - Wired all Phase 1, Phase 2, and Phase 3 subsystems into `TennisSimulationBootstrap.cs` (`ProcessIntegratedRacketStroke`) and `TennisCourtSceneBuilder.cs` (`BuildWiredTrainingRig`), verified by 17/17 NUnit tests.

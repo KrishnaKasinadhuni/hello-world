@@ -4,6 +4,7 @@ using QuestTennisTrainer.Physics;
 using QuestTennisTrainer.TrainingModes.BallMachine;
 using QuestTennisTrainer.TrainingModes.WallPractice;
 using QuestTennisTrainer.TrainingModes.ServeTrainer;
+using QuestTennisTrainer.UI;
 using QuestTennisTrainer.XR_Input;
 
 namespace QuestTennisTrainer.Core
@@ -31,7 +32,7 @@ namespace QuestTennisTrainer.Core
         [SerializeField] private TennisTrainingMode activeMode = TennisTrainingMode.BallMachine;
         [SerializeField] private CourtSurfaceType courtSurface = CourtSurfaceType.HardCourt;
 
-        [Header("System References")]
+        [Header("System References (Phase 1)")]
         [SerializeField] private BallAerodynamics activeBall;
         [SerializeField] private SweptRacketCollider racketCollider;
         [SerializeField] private RacketHapticsController hapticsController;
@@ -39,6 +40,14 @@ namespace QuestTennisTrainer.Core
         [SerializeField] private TennisWallController tennisWall;
         [SerializeField] private ServeTossController serveTrainer;
         [SerializeField] private Transform playerHomeCenterMarker;
+
+        [Header("Phase 2 & Phase 3 Subsystems")]
+        [SerializeField] private TrainingHudController hudController;
+        [SerializeField] private TrajectoryArcRenderer trajectoryArcRenderer;
+        [SerializeField] private RoomScaleGuardianVisualizer guardianVisualizer;
+        [SerializeField] private SwingCoachAnalyzer swingCoach;
+        [SerializeField] private RacketAudioSynthesizer audioSynthesizer;
+        [SerializeField] private AdaptiveDrillDirector adaptiveDrillDirector;
 
         // --- Events ---
         public event Action<TennisTrainingMode> OnTrainingModeChanged;
@@ -53,6 +62,12 @@ namespace QuestTennisTrainer.Core
         public BallMachineController BallMachine => ballMachine;
         public TennisWallController TennisWall => tennisWall;
         public ServeTossController ServeTrainer => serveTrainer;
+        public TrainingHudController HudController => hudController;
+        public TrajectoryArcRenderer TrajectoryArcRenderer => trajectoryArcRenderer;
+        public RoomScaleGuardianVisualizer GuardianVisualizer => guardianVisualizer;
+        public SwingCoachAnalyzer SwingCoach => swingCoach;
+        public RacketAudioSynthesizer AudioSynthesizer => audioSynthesizer;
+        public AdaptiveDrillDirector AdaptiveDirector => adaptiveDrillDirector;
 
         private void Awake()
         {
@@ -89,7 +104,7 @@ namespace QuestTennisTrainer.Core
         }
 
         /// <summary>
-        /// Binds all subsystem references (used by TennisCourtSceneBuilder for zero-click scene generation).
+        /// Binds all Phase 1, Phase 2, and Phase 3 subsystem references (used by TennisCourtSceneBuilder).
         /// </summary>
         public void BindSubsystems(
             BallAerodynamics ball,
@@ -98,7 +113,13 @@ namespace QuestTennisTrainer.Core
             BallMachineController machine,
             TennisWallController wall,
             ServeTossController serve,
-            Transform homeMarker)
+            Transform homeMarker,
+            TrainingHudController hud = null,
+            TrajectoryArcRenderer arcRenderer = null,
+            RoomScaleGuardianVisualizer guardian = null,
+            SwingCoachAnalyzer coach = null,
+            RacketAudioSynthesizer audio = null,
+            AdaptiveDrillDirector adaptiveDirector = null)
         {
             activeBall = ball;
             racketCollider = racket;
@@ -107,9 +128,62 @@ namespace QuestTennisTrainer.Core
             tennisWall = wall;
             serveTrainer = serve;
             playerHomeCenterMarker = homeMarker;
+            hudController = hud;
+            trajectoryArcRenderer = arcRenderer;
+            guardianVisualizer = guardian;
+            swingCoach = coach;
+            audioSynthesizer = audio;
+            adaptiveDrillDirector = adaptiveDirector;
+
+            if (adaptiveDrillDirector != null)
+            {
+                adaptiveDrillDirector.ResetToTier(AdaptiveDifficultyTier.Tier2_BaselineRally);
+            }
 
             ApplyQuest3TimingAndPhysicsLock();
             SwitchTrainingMode(activeMode);
+        }
+
+        /// <summary>
+        /// Processes a single racket-ball impact across all integrated Phase 1, Phase 2, and Phase 3 subsystems:
+        /// Haptics -> Procedural Audio -> Spatial HUD -> Biomechanical Swing Coach -> Adaptive Drill Director.
+        /// </summary>
+        public AdaptiveDrillSnapshot ProcessIntegratedRacketStroke(
+            ImpactData impact,
+            Vector3 racketVelocityWorld,
+            bool clearedNet,
+            bool landedInBounds)
+        {
+            if (hapticsController != null)
+            {
+                hapticsController.HandleRacketHit(impact);
+            }
+
+            if (audioSynthesizer != null)
+            {
+                audioSynthesizer.PlayRacketImpactAudio(impact);
+            }
+
+            if (hudController != null)
+            {
+                hudController.HandleRacketImpact(impact);
+            }
+
+            if (swingCoach != null)
+            {
+                swingCoach.RecordAndAnalyzeStroke(impact, racketVelocityWorld);
+            }
+
+            if (adaptiveDrillDirector != null)
+            {
+                return adaptiveDrillDirector.EvaluatePlayerStroke(
+                    clearedNet,
+                    landedInBounds,
+                    impact.SweetSpotAccuracy,
+                    impact.IsFrameHit);
+            }
+
+            return default;
         }
 
         /// <summary>

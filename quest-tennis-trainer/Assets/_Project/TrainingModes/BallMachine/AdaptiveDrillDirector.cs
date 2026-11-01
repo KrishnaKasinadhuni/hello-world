@@ -206,3 +206,4 @@ namespace QuestTennisTrainer.TrainingModes.BallMachine
         }
     }
 }
+

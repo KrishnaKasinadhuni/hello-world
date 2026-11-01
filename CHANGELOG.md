@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-31
+
 ### Added
+- **[quest-tennis-trainer]**: Completed Session 16 (`Full-Stack Rig Integration`) wiring all Phase 1, Phase 2, and Phase 3 subsystems (`TrainingHudController`, `TrajectoryArcRenderer`, `RoomScaleGuardianVisualizer`, `SwingCoachAnalyzer`, `RacketAudioSynthesizer`, `AdaptiveDrillDirector`) directly into `TennisSimulationBootstrap.cs` (`ProcessIntegratedRacketStroke`) and `TennisCourtSceneBuilder.cs` (`BuildWiredTrainingRig`), verified by 17/17 NUnit tests.
 - **[quest-tennis-trainer]**: Completed Phase 3 (Sessions 13–15) for the Meta Quest 3 VR/MR tennis trainer (`quest-tennis-trainer/`):
   - **Session 13**: Procedural Acoustic Impact Synthesizer (`RacketAudioSynthesizer.cs`) generating 44.1 kHz PCM waveforms for sweet-spot stringbed "pop" (`420 Hz` + `1120 Hz` harmonic + felt snap), graphite frame "clank" (`940 Hz` + `1610 Hz`), and court/wall bounce thuds (`120–195 Hz`), paired 1:1 with `RacketHapticsController.cs`.
   - **Session 14**: Adaptive AI Drill Difficulty Director (`AdaptiveDrillDirector.cs`) scaling `BallMachineController` feed speed (`62–124 km/h`), spin (`800–3200 RPM`), and interval (`3.8–1.7s`) across 5 progressive skill tiers based on player sweet-spot accuracy and consistency, clamped within $\pm 1.20\text{m}$ room-scale reach.

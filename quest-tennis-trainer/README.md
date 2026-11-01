@@ -45,6 +45,7 @@ To keep token and AI Pro credit usage low, development is split into 5 self-cont
 - **[x] Session 13 — Procedural Acoustic Impact Synthesizer**: Add `RacketAudioSynthesizer.cs` (44.1 kHz PCM sweet-spot pop, frame clank & court/wall bounce thud waveforms).
 - **[x] Session 14 — Adaptive AI Drill Difficulty Director**: Add `AdaptiveDrillDirector.cs` (5-tier difficulty ladder scaling pace and spin RPM within $\pm 1.2\text{m}$ room-scale reach).
 - **[x] Session 15 — Local & Cloud TOON Telemetry Persistence**: Add `SessionTelemetryPersistence.cs` (SHA-256 signed `.toon` session files & GCP Cloud Storage / Firestore JSON envelope builder).
+- **[x] Session 16 — Full-Stack Rig Integration**: Wire all Phase 1–3 subsystems into `TennisSimulationBootstrap.cs` (`ProcessIntegratedRacketStroke`) and `TennisCourtSceneBuilder.cs` (`BuildWiredTrainingRig`) with 17/17 NUnit tests.
 
 ## Running the Hardened Physics Sandbox & Quest 3 Sideloader
 
