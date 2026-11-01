@@ -489,6 +489,43 @@ namespace QuestTennisTrainer.Tests
                 }
             }
         }
+
+        [Test]
+        public void FullStackRigIntegration_ProcessesStrokeAcrossAudioHapticsHudCoachAndAdaptiveDirector()
+        {
+            TennisSimulationBootstrap rig = TennisCourtSceneBuilder.BuildWiredTrainingRig();
+
+            Assert.IsNotNull(rig.HudController);
+            Assert.IsNotNull(rig.TrajectoryArcRenderer);
+            Assert.IsNotNull(rig.GuardianVisualizer);
+            Assert.IsNotNull(rig.SwingCoach);
+            Assert.IsNotNull(rig.AudioSynthesizer);
+            Assert.IsNotNull(rig.AdaptiveDirector);
+            Assert.AreEqual(AdaptiveDifficultyTier.Tier2_BaselineRally, rig.AdaptiveDirector.CurrentTier);
+
+            ImpactData impact = new ImpactData
+            {
+                ImpactNormal = new Vector3(0f, 0.03f, 0.9995f).normalized,
+                OutgoingSpeedKmh = 126f,
+                OutgoingSpinRpm = 2500f,
+                SpinAxis = Vector3.right,
+                SweetSpotAccuracy = 0.93f,
+                IsFrameHit = false
+            };
+
+            float rad18 = 18f * Mathf.Deg2Rad;
+            Vector3 swingVel = new Vector3(0f, Mathf.Sin(rad18) * 21f, Mathf.Cos(rad18) * 21f);
+
+            // Process 3 quality strokes through the full-stack rig and verify promotion to Tier3_HeavyTopspin
+            rig.ProcessIntegratedRacketStroke(impact, swingVel, clearedNet: true, landedInBounds: true);
+            rig.ProcessIntegratedRacketStroke(impact, swingVel, clearedNet: true, landedInBounds: true);
+            AdaptiveDrillSnapshot snapshot = rig.ProcessIntegratedRacketStroke(impact, swingVel, clearedNet: true, landedInBounds: true);
+
+            Assert.AreEqual(AdaptiveDifficultyTier.Tier3_HeavyTopspin, snapshot.CurrentTier);
+            Assert.AreEqual("SweetSpotPop", rig.AudioSynthesizer.LastSynthesizedReport.SoundCategory);
+            Assert.AreEqual("126 km/h | 2500 RPM (Topspin)", rig.HudController.LatestSnapshot.FormattedRadarReadout);
+            Assert.AreEqual(3, rig.SwingCoach.ComputeSessionSummary().TotalShots);
+        }
     }
 }
 
